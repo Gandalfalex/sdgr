@@ -1,0 +1,99 @@
+image: ubuntu
+services: [ ]
+
+
+stages:
+  - test
+  - build
+  - deploy
+
+variables:
+  DOCKER_HOST: "unix:///var/run/docker.sock"
+  DOCKER_TLS_CERTDIR: ""
+  DOCKER_DRIVER: overlay2
+  STACK_NAME: SUS_APP
+  IMAGE_TAG: $CI_COMMIT_SHA
+  DOCKER_REGISTRY: $CI_REGISTRY_IMAGE
+  DOCKER_LOGIN_URL: $CI_LOGIN_URL
+  SSH_PRIVATE_KEY: $SSH_KEY
+
+build-django:
+  stage: build
+  image: python:3.11
+  before_script:
+    - cd data-training-app/djangoProject
+    - apt-get update -qq && apt-get install -y curl gnupg2
+    - curl -fsSL https://get.docker.com -o get-docker.sh
+    - sh get-docker.sh
+    - echo 
+    - docker login $DOCKER_LOGIN_URL -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD 
+  script:
+    - docker build -t $DOCKER_REGISTRY/sus_api_django:$IMAGE_TAG .
+    - docker push $DOCKER_REGISTRY/sus_api_django:$IMAGE_TAG
+
+build-spring:
+  stage: build
+  image: maven:3.9-eclipse-temurin-17-focal
+  cache:
+    key: "maven-$CI_COMMIT_REF_SLUG"
+  before_script:
+    - cd spring-backend
+    - apt-get update -qq && apt-get install -y curl gnupg2
+    - curl -fsSL https://get.docker.com -o get-docker.sh
+    - sh get-docker.sh
+    - docker login $DOCKER_LOGIN_URL -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
+  script:
+    -  docker build -t $DOCKER_REGISTRY/sus_api_spring:$IMAGE_TAG .
+    -  docker push $DOCKER_REGISTRY/sus_api_spring:$IMAGE_TAG
+
+
+
+build-react:
+  stage: build
+  image: node:16
+  before_script:
+    - cd frontend
+    - apt-get update -qq && apt-get install -y curl gnupg2
+    - curl -fsSL https://get.docker.com -o get-docker.sh
+    - sh get-docker.sh
+    - docker login $DOCKER_LOGIN_URL -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD 
+  script:
+    - docker build -t $DOCKER_REGISTRY/sus_frontend:$IMAGE_TAG .
+    - docker push $DOCKER_REGISTRY/sus_frontend:$IMAGE_TAG
+
+
+build-hugo:
+  stage: build
+  image: ubuntu:latest
+  before_script:
+    - cd documentation
+    - apt-get update -qq && apt-get install -y curl gnupg2
+    - curl -fsSL https://get.docker.com -o get-docker.sh
+    - sh get-docker.sh
+    - docker login $DOCKER_LOGIN_URL -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD 
+  script:
+    - docker build -t $DOCKER_REGISTRY/sus_hugo:$IMAGE_TAG .
+    - docker push $DOCKER_REGISTRY/sus_hugo:$IMAGE_TAG
+
+
+deploy:
+  stage: deploy
+  image: ubuntu:latest
+  before_script:
+    - cd deployment/swarm
+    - apt-get update -qq && apt-get install -y curl gnupg2
+    - curl -fsSL https://get.docker.com -o get-docker.sh
+    - sh get-docker.sh
+    - chmod 644 traefik.yml
+  script:
+    - docker login $DOCKER_LOGIN_URL -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD 
+    - |
+      sed -e "s|<Django>|$DOCKER_REGISTRY/sus_api_django:$IMAGE_TAG|g" \
+      -e "s|<Spring>|$DOCKER_REGISTRY/sus_api_spring:$IMAGE_TAG|g" \
+      -e "s|<React>|$DOCKER_REGISTRY/sus_frontend:$IMAGE_TAG|g" \
+      -e "s|<Hugo>|$DOCKER_REGISTRY/sus_hugo:$IMAGE_TAG|g" \
+      docker-compose.yml.template > docker-compose.yml
+    - if ! docker network ls | grep -qw sus-network; then docker network create --driver=overlay --attachable sus-network; fi
+    - docker stack deploy --with-registry-auth -c docker-compose.yml $STACK_NAME
+  only:
+    - master
