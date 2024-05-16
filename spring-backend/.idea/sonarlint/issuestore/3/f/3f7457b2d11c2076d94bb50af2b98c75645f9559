@@ -1,0 +1,11 @@
+
+€
+java:S1488"^Immediately return this expression instead of assigning it to the temporary variable "mapper".(Åùïíıÿÿÿÿ8Áø™‘½1
+i
+java:S1128"MRemove this unused import 'de.tudresden.sus.adapter.outbound.entity.Project'.(ïÆî38¾•¡íÅ1
+n
+java:S1128"LRemove this unused import 'de.tudresden.sus.adapter.inbound.dto.ProjectDTO'.(±İÚÖÿÿÿÿÿ8¾•¡íÅ1
+h
+java:S1128"KRemove this unused import 'de.tudresden.sus.adapter.outbound.entity.Track'.(Ñµœ8¾•¡íÅ1
+M
+java:S1128"0Remove this unused import 'java.util.ArrayList'.(÷‰îƒ8¾•¡íÅ1

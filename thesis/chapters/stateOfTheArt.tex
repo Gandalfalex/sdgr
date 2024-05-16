@@ -1,0 +1,163 @@
+% !TeX program = xelatex
+
+\chapter{Ausgangslage und Stand der Technik}
+\label{cha:stateOfTheArt}
+
+\section{Ansätze aus dem Bereich des maschinellen Lernens}
+
+\subsection{SynGen: Synthetic Data Generation}
+
+SynGen, ein von Akash Kothare et al.\cite{9697232} entwickeltes Instrument zur Synthese von Daten, wurde auf der ICCICA 2021 (International Conference on Computational Intelligence and Computing Applications) präsentiert.
+Das Tool folgt einem dreistufigen Prozess zur Generierung von Benutzerdaten, der Flexibilität und Anpassungsfähigkeit in der Datenproduktion bietet.
+
+In der Initialisierungsphase bietet SynGen Benutzern die Wahl, entweder ein Beispielset zu importieren oder durch die Spezifikation von Feldnamen und der gewünschten Zeilenzahl einen neuen
+Datensatz zu generieren, wobei letzteres durch den Einsatz von Faker\cite{Faker} als Grundlage für die Datenerstellung dient.
+
+Daraufhin wird im zweiten Schritt des Prozesses die maschinelle Lernstrategie gewählt. Das Tool stellt verschiedene Implementierungen des überwachten Lernens für Regression und
+Klassifikation sowie des unüberwachten Lernens zur Verfügung. Diese Auswahl ermöglicht es dem Benutzer, die Methode zu wählen, die am besten zu den Anforderungen der spezifischen Daten und des intendierten Anwendungsfalls passt.
+
+Im abschließenden Verfahrensschritt ermöglicht der Similarity Index der Modelle eine Evaluation der Leistungsfähigkeit der verschiedenen Algorithmen. Um diese Bewertung zu vereinfachen,
+verwendet SynGen ein Effizienzvergleichsdiagramm sowie eine Konfusionsmatrix, die die Genauigkeit der Modelle illustriert und somit eine direkte und nutzerfreundliche Methode zur Bewertung der Modellqualität bietet.
+
+
+\subsection{GenEthos}
+Im Rahmen der fortschreitenden Entwicklung synthetischer Datengenerierungssysteme stellt das Werk von Shubham Gujar et al.\cite{9885653}, "GenEthos",
+ein innovatives GUI-basiertes Tool dar. Dieses System zeichnet sich durch seine Fähigkeit aus, nicht nur synthetische Daten zu erstellen,
+sondern auch eine kontinuierliche Überwachung und Bias-Detektion für die generierten Modelle zu ermöglichen.
+Zur Bewahrung logischer Konsistenzen innerhalb der erzeugten Datenmengen integriert GenEthos die Principal Component Analysis (PCA) und Learning Fair Representations (LFR).
+PCA dient hier als eine Technik zur Dimensionsreduzierung, die Daten aus einem hochdimensionalen in einen niedrigeren Raum transformiert, während die maximale
+Informationsmenge erhalten bleibt\cite{PCA_Explained}. LFR wird als Vorverarbeitungsmethode verwendet, um diskriminierende Merkmale aus den Daten zu entfernen\cite{LFR_Explained}.
+
+Darüber hinaus präsentieren die Autoren ein benutzerdefiniertes Konzept für die kategorische Erstellung von Benutzeroberflächen, das es dem Nutzer ermöglicht,
+die Datenbeziehungen durch vordefinierte Ausdrücke wie Zufallsfunktionen oder Bedingungen anzupassen oder sogar eigene Python-Funktionen zu implementieren, um Verknüpfungen zwischen den Tabellenspalten zu modifizieren oder zu generieren.
+
+Die Datenerstellung erfolgt unter Verwendung von Faker\cite{Faker} für den anfänglichen Input und fünf unterschiedlichen Modellen für die Datenmodellierung:
+
+\begin{description}
+    \item[\namedlabel{genethos:tgan}{T-GAN}] bietet eine auf tabellarische Daten spezialisierte GAN-Variante.
+    \item[\namedlabel{genethos:gretel}{Gretel}] verwendet LSTM-basierte Netzwerke und legt den Fokus auf Datenschutz.
+    \item[\namedlabel{genethos:CTGAN}{CTGAN}] repräsentiert einen weiteren GAN-basierten Ansatz für die Modellierung tabellarischer Daten und die Generierung von Datenzeilen aus einer Verteilung.
+\end{description}
+
+Zur Bewertung von Fairness und zur Minderung ethischer Voreingenommenheit wurden zusätzlich Metriken wie Statistical Parity Difference und Disparate Impact sowie Algorithmen wie Prejudice Remover,
+Disparate Impact Remover und Learning Fair Representations verwendet. Diese Methoden liegen jedoch außerhalb des Umfangs dieser Arbeit.
+
+In der Evaluation ihres Systems verwendeten die Forscher die Adult- und German Credit Datensätze, um Fairness und Bias zu untersuchen und führten Vergleiche mit synthetischen Daten aus den oben
+genannten Modellen durch. Alle drei Modelle replizierten die vorhandenen Daten mit geringfügigen Bias-Abweichungen effektiv. Die Hauptzielsetzung der Studie war es, den Beitrag von
+Algorithmen zur Bias-Entfernung zu bewerten. Dabei wurde festgestellt, dass zwar eine Reduktion von Bias möglich ist, diese jedoch ihre Grenzen hat.
+
+
+\subsection{Synthetic Test Data Generation Using Recurrent Neural Networks: A Position Paper}
+In der Untersuchung von Razieh Behjati et al.\cite{8823801} wird der Einsatz von Long Short-Term Memory (LSTM) Netzwerken zur Generierung von synthetischen Testdaten für ereignisgesteuerte Systeme beleuchtet.
+Diese Forschung findet im Rahmen des Upgrades des norwegischen nationalen Registers statt, einem Kontext, der eine hohe Sensibilität für den Datenschutz erfordert. Synthetische Daten dienen hier als
+Alternative zu realen Produktionsdaten, insbesondere wenn letztere persönliche Informationen enthalten, die nicht für Tests freigegeben werden können.
+
+Das Team hat einen Ansatz verfolgt, bei dem Eingabedaten in sogenannte Meta-Events segmentiert wurden, die jeweils eine Klassifizierung und assoziierte personenbezogene Daten enthielten.
+Diese methodische Aufteilung ermöglichte es dem LSTM-Modell, die Struktur und essentiellen Muster der Daten – wie die Zuordnung von Monaten zu deren maximaler Tagesanzahl – effektiv zu lernen.
+
+Während das Modell Basisabhängigkeiten mit Erfolg reproduzieren konnte, zeigte sich bei der Abbildung komplexerer Regeln, wie der Berücksichtigung von Schaltjahren, eine gewisse
+Begrenzung. Dies lässt sich potenziell auf die Größe des Trainingsdatensatzes zurückführen und weist auf den Bedarf an umfangreicheren Daten für das Training fortgeschrittener Sequenzmodellierung hin.
+
+
+\subsection{Generation of Synthetic Continuous Numerical Data Using Generative Adversarial Networks}
+
+In ihrer Studie untersuchen A H Aziira und Kollegen\cite{Aziira_2020} die Anwendung von Generative Adversarial Networks (GANs) zur Erzeugung kontinuierlicher numerischer Daten für unüberwachte maschinelle
+Lernprozesse (Unsupervised Machine Learning Tasks). Die Kernforschung evaluiert die Effizienz von GANs und Conditional GANs (CGANs) bei der Generierung authentischer Datensätze durch ein gezieltes Experiment mit begrenztem Umfang.
+
+Für das Experiment bedienten sich die Autoren des öffentlichen Datensatzes
+WornBlade002\footnote[1]{Dieser Datensatz stammt von Schneidmessern der Vega
+    Schrumpffolienproduktion und dient der Überwachung der Maschinenperformance.}, um die Performance eines GAN und eines CGAN zu trainieren und zu beurteilen.
+Die Authentizität der generierten Daten wurde durch zwei komplementäre Methoden geprüft: qualitative Bewertungen zur Beurteilung der Übereinstimmung der
+Datenverteilung mit dem Originaldatensatz und quantitative Maßnahmen zur Einschätzung der Realitätsnähe der synthetisierten Daten. Letztere basierten auf
+dem XGBoost-Algorithmus – einem Gradient Boosting Framework für baumbasierte Lernmodelle –, der auf einer Kombination von echten und generierten Daten trainiert wurde.
+Die Genauigkeit der Modelle wurde mittels einer Konfusionsmatrix evaluiert, mit dem Ziel, eine Genauigkeit (Accuracy) von 50\%
+zu erreichen, was eine Ununterscheidbarkeit zwischen echten und generierten Daten suggerieren würde.
+
+\begin{equation}
+    accuracy = \frac{TP + TN}{TP + TN + FP + FN} *  100\%
+\end{equation}
+
+Zusätzlich wurde der Mann-Whitney-U-Test angewandt, um die statistische Signifikanz der Unterschiede zwischen den echten und generierten
+Datenstichproben zu ermitteln und Tendenzen der Abhängigkeit aufzudecken\cite{MannWhit25:online}.
+
+Die Ergebnisse des Experiments zeigen, dass nach ungefähr 10.000 Trainingsschritten die Genauigkeitswerte der GANs und CGANs nur noch marginal
+verbessert werden konnten. Mit einer maximalen Genauigkeit von 55\% für die CGANs demonstrieren die Ergebnisse eindrucksvoll, dass
+GANs prinzipiell fähig sind, kontinuierliche numerische Daten mit hoher Qualität zu generieren.
+
+\section{Zeitreihenanalyse- und Zerlegung}
+
+\subsection{The empirical mode decomposition and the Hilbert spectrum for nonlinear and non-stationary time series analysis}
+Huang u.w.\cite{doi:10.1098/rspa.1998.0193,} arbeiteten an einer neuen Methode um komplexe,
+nicht-lineare\footnote{Bei nicht-linearen Daten zeigt die Beziehung zwischen abhängigen und unabhängigen Variablen keine gerade Linie.} und
+nicht-stationäre\footnote{Im Kontext von Time Series sind nicht-stationäre Daten Segmente oder Teile, die unabhängig von der Zeit Ihre Werte besitzten.} Daten zu analysieren.
+
+
+Dafür nutzten sie eine \acp{EMD}, eine Methode zum Zerlegen von komplexen Daten endliche, meist kleine Anzahl von \acp{IMF}, welche zwei Regeln befolgen müssen.
+\begin{enumerate}
+    \item Die Anzahl an Maxima und Nullpunkten sollte möglichst 0 sein.
+    \item An jedem Punkt sollte die Summe des lokalen Maximums und Minimums 0 sein.
+\end{enumerate}
+
+Hierdurch werden Maxima und Minima mit Splines verbunden und daraufhin die Mittelwerte der Maxima- und Minimaanstiege aus dem Signal entfernt.
+Dieser Prozess ist iterativ und wiederhohlt sich, bis keine Maxima mehr vorhanden sind.
+Da dies teilweise zu Problemen führt, wurde der Algorithmus 2003 von Huang Daji u.w.\cite{daji2003practical} angepasst,
+indem eine \acp{EEM} eingeführt wurde, welche das Signal um erste und letzten lokale Extrema erweitert. Diese werden bei der späteren Berechnung besonders behandelt.
+
+Aus den einzelnen \ac{IMF}s, welche man mit oszilierenden Funktionen vergleichen kann, werden genutzt um durch eine \acp{HSA} über einen Zeitparameter das Signal zu rekonstruieren.
+Die Summe der einzelnen Funktionen kann somit das originale Signal rekonstruieren.
+\begin{equation}
+    X(t) = \sum_{i=1}^{M} IMF_{i} + r(t)
+\end{equation}
+
+Während das \acp{HHT}, wie die Methode auch genannt wird, viele verschiedene Einsatzgebiete, von
+Biomedizin über Ozeanographie bis Seismographie, hat, ist gerade die Glättungsfunktion der \ac{EMD} in vielen Bereichen besonders relevant.
+% kann genommen werden um random aspekte aus signal zu entfernen
+
+
+\subsection{Singular Spectrum Decomposition: a New Method for Time Series Decomposition}
+In \cite{doi:10.1142/S1793536914500113} stellten PIETRO BONIZZI Pietro Bonizzi u.w. eine neue Methode zur Aufspaltung von nichtlinearen, nichtstationären Zeitreihen vor.
+
+Aufbauend auf \ac{SSA} (siehe \ref*{techniques:SSA}), lieferten sie einen innovativen Ansatz, welcher das bestehende \ac{SSA} Prinzip übernimmt, den dahinterliegenden Algorithmus aber überarbeitet.
+So wird beispielsweise die Trajektorienmatrix angepasst und fokussiert sich stärker auf die oszilierenden Komponenten des Signales.
+Im Zerlegungsprozess ist ein Fokus auf die Frequenzen somit einfacher und dies erlaubt wiederum aussagekräftige Komponenten zu isolieren.
+Eine weitere wichtige Neuerung ist die Auswahl von Hauptkomponenten zu automatisieren. Dieser in SSA noch manuelle Schritt
+
+
+Es erlaubt somit einen Fokus auf die Frequenzen und kann somit besser die Frequenzen isolieren aber die Auswahl der Parameter wie window-length automatisiert und somit nicht für die jeweiligen Daten neu angepasst werden muss.
+
+
+\subsection{Synthetic Data by Principal Component Analysis}
+In dem Paper \cite{9346379} zur synthetischen Datengenerierung stellt Natsuki Sano zwei Methoden vor. Beide zielen darauf ab aus realen Daten (Daten aus von Decathlon organisierten Sport Events wie Weitsprung, Hochsprung und Sprint), die persönlichen Aspkete zu entfernen,
+aber die Eigenschaften der Daten an sich beizubehalten. Dies steht entegegen dem Konzept des Maskierens von Daten um Annonymität zu erreichen.
+Für die generierung wird ein linearer und ein nicht linearer Ansatz vorgesetllt.
+
+\paragraph*{Orthogonale Transformation}
+ist eine Methode welche auf \acf{PCA} setzt. \ac{PCA} ist eine statistisches Analyseverfahren, welches große Datenmengen in kleinere, den inhalt zusammenfassende Sets aufteilt. Diese sind dadurch leichter zu analysieren.
+Aber \ac{PCA} ist lediglich in der Lage den linearen Zusammenhang zwischen Variablen zu analysieren und darzustellen.
+Interessant ist dieser Ansatz, da er eine direkte Bewertung des Verfahrens zulässt. Duch die im Prozess verworfenen Eigenwerte kann der Informationsverlust bestimmt werden.
+
+\paragraph*{Sandglass-Type Neural Networks}
+Für nicht-lineare Zusammenhänge kann normale \ac{PCA} nicht eingesetzt werden, Da aber nicht alle Zusammenhänge innerhalb der Daten linearer Natur sind, wird ein anderer Ansatz gebraucht, dier kommt in Form von Sandglass Neural Networks.
+Diese Sanduhr Förmigen Netzwerke besitzten eine stark eingeschränkte Zwischenschicht, ähnelt daher einer Sanduhr. Dies sorgt dafür, dass die originalen Daten in der Zwischenschicht stark reduziert werden um dann in der Ausgangsschicht aus der komprimierten Version die Daten wieder zu rekonstruieren.
+Somit kann Machine Learning im \ac{PCA} Verfahren eingesetzt werden komplexe Zusammenhänge zu finden.
+
+Zur Messung der Ergebnisse setzt Sano auf vier Methoden. Mean Absolute Error (MAE) kann über eine große Menge an Daten den durschnittlichen Absoluten Fehler berechnen und somit einen Einblick in die Daten geben, Mean Absolute Error des Mittelwerts einzelner Variablen (MAEM) um zu schauen ob sich die Grundtendenz der synthetischen Daten sich noch an den originalen Daten richtet,
+Mean Absolute Error der Kovarianz zwischen Variablen (MEAC) um zu schauen wie gut die Beziehungen zwischen den Variablen erhalten bleiben.
+Zusätzlich zu diesen schlägt der Autor noch ein eienenes Methode vor um den Informationsverlust über verworfene Dimensionenen, welche er aber nicht genauer erklärt.
+
+Die Ergebnisse beider Methoden zeigen eine klare Überlegenheit des linearen Verfahrens, da hier der Informationsverlust geringer ist. Dies wird aber auf die geringe Datenmenge zurückgeführt.
+
+
+
+\section{Auswertung des aktuellen Standes der Technik}
+Die hier vorgestellten Ansätze und Werkzeuge spiegeln den aktuellen Stand der Forschung wider und bieten Einblicke in die fortschrittlichen Methoden, die in diesen Feldern angewendet werden.
+
+Im Bereich der synthetischen Datengenerierung wurden unterschiedliche Tools und Methoden wie SynGen, GenEthos, und Ansätze unter Verwendung von LSTM-Netzwerken und GANs beleuchtet. Diese Technologien zeichnen sich durch ihre Fähigkeit aus, realistische,
+anpassungsfähige und datenschutzkonforme synthetische Daten zu erstellen. Besonders betont wird dabei die Bedeutung von Flexibilität, Fairness, Bias-Detektion und die Anpassung an verschiedene Anwendungsfälle,
+von der Bias-Minimierung bis hin zur Maschinenleistungsüberwachung.
+
+Der zweite Schwerpunkt liegt auf der Zeitreihenzerlegung, wobei Methoden wie die Empirical Mode Decomposition (EMD), Hilbert-Huang-Transformation (HHT) und Singular Spectrum Analysis (SSA) hervorgehoben werden.
+Diese Methoden sind entscheidend für das Verständnis und die Analyse von nicht-linearen und nicht-stationären Zeitreihen. Sie ermöglichen eine detaillierte Untersuchung komplexer Datensätze durch ihre Zerlegung in fundamentale Komponenten.
+
+Die Bewertung dieser Methoden und Technologien erfolgt sowohl qualitativ als auch quantitativ. Dabei stehen die Übereinstimmung der Datenverteilungen, die Genauigkeit der Modelle und die statistische Signifikanz im Vordergrund.
+Diese Bewertungskriterien sind entscheidend, um die Wirksamkeit und Zuverlässigkeit der Ansätze zu bestätigen.

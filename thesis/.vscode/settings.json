@@ -1,0 +1,17 @@
+{
+    "latex-workshop.latex.build.forceRecipeUsage": false,
+    "files.exclude": {
+        "**/*.lof": true,
+        "**/*.log": true,
+        "**/*.out": true,
+        "**/*.lol": true,
+        "**/*.loe": true,
+        "**/*.lot": true,
+        "**/*.bcf": true,
+        "**/*.bbl": true,
+        "**/*.toc": true,
+        "**/*.run.xml": true,
+        "**/*.synctex.gz": true,
+        "**/*.aux": true
+    }
+}

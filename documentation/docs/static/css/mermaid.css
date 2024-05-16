@@ -1,0 +1,11 @@
+.mermaid {
+    width: 100%;
+    max-width: 1800px; /* Adjust this value to your preference */
+    height: auto;
+}
+
+.mermaid-large {
+    width: 150%;
+    height: auto;
+    margin: 0 auto;
+}

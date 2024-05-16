@@ -1,0 +1,22 @@
+sequenceDiagram
+    autonumber
+    User ->> Frontend: dialog_create_new_solution
+    
+    Frontend->>DjangoAPI: set name, description
+    DjangoAPI->>Frontend: send user's data
+    Frontend-->>DjangoAPI: upload new data
+    DjangoAPI->> PostgreSQL: save new data
+    DjangoAPI->> PostgreSQL: create new solution
+
+    Frontend->>DjangoAPI: get preprocessor types
+    DjangoAPI->>Frontend: send types with json schema
+    
+    loop configure
+      User ->> Frontend: select and set config
+      Frontend->>DjangoAPI: ask for preview
+      DjangoAPI->>Frontend: send preview
+    end
+
+    User ->> Frontend: confirm 
+    Frontend->>DjangoAPI: save config to solution
+    DjangoAPI->> PostgreSQL: save config

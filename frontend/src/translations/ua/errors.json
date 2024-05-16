@@ -1,0 +1,7 @@
+{
+  "INVALID_KEY": "неправильний ввід",
+  "UNAUTHORIZED": "запит не авторизовано",
+  "JWT_EXPIRED": "токен jwt вийшов з часу",
+  "INVALID_ID": "Id не є дійсним",
+  "CONVERSION_ERROR": "помилка конвертації даних"
+}

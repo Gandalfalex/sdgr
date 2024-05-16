@@ -1,0 +1,33 @@
+{
+  "data_set_name": "Der Name des Datensatzes.",
+  "data_set_frequency": "Die Frequenz (in Hertz), in der die Stichprobenwerte gesendet werden.",
+  "data_set_samples": "Die Anzahl der Proben (Datenpunkte), aus denen dieser Datensatz besteht.",
+  "data_set_alphabet": "Das Alphabet, ein Array aus einzelnen Zeichenketten.",
+  "data_set_sleep": "Die Gesamtanzahl der Sekunden, die der Sender ruht.",
+  "data_set_calculation": "Bestimmt die Zusammensetzungsoperation, die verwendet wird, um Trend, Saison und Restwerte zu kombinieren.",
+
+  "errors": {
+    "required": "Das Feld '{{missingProperty}}' ist erforderlich.",
+    "type": "Falscher Datentyp. Erwarteter Typ: {type}.",
+    "enum": "Der Wert muss einem der vordefinierten Werte entsprechen: {values}.",
+    "const": "Der Wert muss {value} sein.",
+    "minLength": "Der Text ist zu kurz. Minimale Länge ist {minLength}.",
+    "maxLength": "Der Text ist zu lang. Maximale Länge ist {maxLength}.",
+    "pattern": "Der Text entspricht nicht dem erforderlichen Muster.",
+    "format": "Das Format ist falsch. Erwartetes Format: {format}.",
+    "minimum": "Die Zahl ist zu niedrig. Minimaler Wert ist {minimum}.",
+    "maximum": "Die Zahl ist zu hoch. Maximaler Wert ist {{limit}}.",
+    "exclusiveMinimum": "Die Zahl muss größer als {minimum} sein.",
+    "exclusiveMaximum": "Die Zahl muss kleiner als {maximum} sein.",
+    "multipleOf": "Die Zahl muss ein Vielfaches von {multipleOf} sein.",
+    "minItems": "Es gibt zu wenige Elemente. Minimum ist {minItems} Elemente.",
+    "maxItems": "Es gibt zu viele Elemente. Maximum ist {maxItems} Elemente.",
+    "uniqueItems": "Die Elemente im Array müssen einzigartig sein.",
+    "contains": "Das Array muss ein bestimmtes Element enthalten.",
+    "minProperties": "Es gibt zu wenige Eigenschaften. Minimum ist {minProperties}.",
+    "maxProperties": "Es gibt zu viele Eigenschaften. Maximum ist {maxProperties}.",
+    "additionalProperties": "Zusätzliche Eigenschaften sind nicht erlaubt.",
+    "dependencies": "Fehlende abhängige Eigenschaft: {property}.",
+    "propertyNames": "Einige Eigenschaftsnamen erfüllen nicht die erforderlichen Kriterien."
+  }
+}

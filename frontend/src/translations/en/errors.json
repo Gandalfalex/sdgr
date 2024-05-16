@@ -1,0 +1,10 @@
+{
+  "INVALID_KEY": "invalid input",
+  "UNAUTHORIZED": "request unauthorized",
+  "JWT_EXPIRED": "jwt token is expired",
+  "INVALID_ID": "Id is not valid",
+  "CONVERSION_ERROR": "conversion of data failed",
+  "NOT_FOUND": "Element not found",
+  "UNDEFINED": "Not yet declared",
+  "BAD_REQUEST": "NOT GOOD"
+}

@@ -1,0 +1,171 @@
+version: '3.8'
+
+services:
+  traefik:
+    image: traefik:v3.0.0-beta5
+    container_name: traefik-proxy
+    command:
+      - --api.insecure=true
+      - --api.dashboard=true
+      - --providers.docker
+      - --entrypoints.web.address=:80
+      - --providers.docker.network=proxy
+      - --providers.docker.exposedbydefault=true 
+      - --log.level=TRACE
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8090:8090" 
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.yml:/etc/traefik/traefik.yml
+    networks:
+      - sus-network
+    restart: unless-stopped
+
+  db:
+    image: postgres:14
+    container_name: sus-db-dev
+    environment:
+      - POSTGRES_USER=sample
+      - POSTGRES_PASSWORD=sample
+    ports:
+      - "5432:5432"
+    networks:
+      sus-network:
+        aliases:
+          - db-alias
+    restart: unless-stopped
+
+  django:
+    build: 
+      context: ../../data-training-app/djangoProject
+    container_name: django-dev
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://db-alias:5432/postgres
+      - DATABASE_ALIAS=db-alias
+      - REDIS_ALIAS=redis-alias
+      - DJANGO_SETTINGS_MODULE=djangoProject.settings
+    ports:
+      - "8000:8000"
+    networks:
+      sus-network:
+        aliases:
+          - django-alias
+    labels:
+      - traefik.enable=true
+      - "traefik.http.routers.django-backend.rule=(Host(`localhost`) || Host(`t123abcdefg.mooo.com`)) && PathPrefix(`/django`)"
+      - traefik.http.routers.django-backend.entrypoints=web
+      - "traefik.http.middlewares.django-stripprefix.stripprefix.prefixes=/django"
+      - "traefik.http.routers.django-backend.middlewares=django-stripprefix@docker"
+      - "traefik.http.middlewares.django-headers.headers.customrequestheaders.Upgrade=$http_upgrade"
+      - "traefik.http.middlewares.django-headers.headers.customrequestheaders.Connection=$connection_upgrade"
+    restart: unless-stopped
+
+  springapp:
+    build:
+      context: ../../spring-backend
+    container_name: spring-backend-dev
+    networks:
+      sus-network:
+        aliases:
+          - springapp-alias
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-alias:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=sample
+      - SPRING_DATASOURCE_PASSWORD=sample
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    labels:
+      - traefik.enable=true
+      - "traefik.http.routers.spring-backend.rule=(Host(`localhost`) || Host(`t123abcdefg.mooo.com`)) && PathPrefix(`/springboot`)"
+      - traefik.http.routers.spring-backend.entrypoints=web
+      - traefik.http.middlewares.spring-stripprefix.stripprefix.prefixes=/springboot
+      - "traefik.http.routers.spring-backend.middlewares=spring-stripprefix@docker"
+    restart: unless-stopped
+
+  hugo-site:
+    build: 
+      context: ../../documentation
+    container_name: hugo-site-dev
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.hugo-site.rule=(Host(`localhost`) || Host(`t123abcdefg.mooo.com`)) && PathPrefix(`/docs`)
+      - traefik.http.routers.hugo-site.entrypoints=web
+      - traefik.http.middlewares.hugo-stripprefix.stripprefix.prefixes=/docs
+      - traefik.http.routers.hugo-site.middlewares=hugo-stripprefix@docker
+      - traefik.http.services.hugo-site.loadbalancer.server.port=1313
+    networks:
+      sus-network:
+        aliases:
+          - hugo-alias
+    ports:
+      - "1313:1313"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ../../frontend
+    container_name: react-dev
+    networks:
+      sus-network:
+        aliases:
+          - frontend-alias
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.frontend.rule=(Host(`localhost`) || Host(`t123abcdefg.mooo.com`)) 
+      - traefik.http.routers.frontend.entrypoints=web
+    ports:  
+      - "3000:3000"
+    restart: unless-stopped
+
+
+  redis: 
+    image: "redis:alpine"
+    container_name: redis-dev
+    ports:
+      - "6379:6379"
+    networks:
+      sus-network:
+        aliases:
+          - redis-alias
+    restart: unless-stopped
+  
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: sus-zookeeper
+    ports:
+      - "2181:2181"
+    restart: unless-stopped
+    networks:
+      sus-network:
+        aliases:
+          - zoo-alias
+
+  kafka:
+    image: wurstmeister/kafka
+    container_name: sus-kafka
+    ports:
+      - "9092:9092"
+    networks:
+      sus-network:
+        aliases:
+          - kafka-alias
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zoo-alias:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka-alias:9093,OUTSIDE://localhost:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+    restart: unless-stopped
+
+networks:
+  sus-network:
+    name: sus-network
+    driver: bridge
+    external: true

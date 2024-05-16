@@ -1,0 +1,45 @@
+{
+  "search": "Search",
+  "graphic_train_data_display": "Show graphical representation of training data",
+  "move_to": "Move to the Project",
+  "delete_directly": "You can directly delete the DataSet from here",
+  "login_f_name": "First Name",
+  "login_s_name": "Surname",
+  "login_e_mail": "E-Mail Address",
+  "login_pass": "Password",
+  "sign_up": "Signup",
+  "login": "Log in",
+
+  "log_message": "Messages",
+  "log_time": "Time (in UTC)",
+  "log_session": "Session",
+  "log_dataset": "DataSet",
+  "log_no_record": "No data has been recorded yet",
+
+  "single_value_position": "Position",
+  "single_value_value": "Value",
+  "single_value_delete_entry": "Delete Entry",
+
+  "data_set_common_samples": "Samples",
+  "data_set_common_frequency": "Frequency [Hz]",
+  "data_set_common_season": "Season",
+  "data_set_common_trend": "Trend",
+  "data_set_common_residual": "Residual",
+  "data_set_common_alphabet": "Alphabet",
+  "data_set_common_sleep_time": "Sleep Time",
+  "data_set_headline_info": "Information",
+  "data_set_headline_graph": "Graph Preview",
+
+  "data_set_headline_individual": "Individually Defined Values",
+  "data_set_no_preview": "Individually Defined Values",
+  "data_set_graph": "Graph",
+  "data_set_logs": "Logs",
+  "data_set_datasets": "DataSet",
+
+  "data_type_select": "Select your Data Type",
+  "find_training_data_label": "Find your training data",
+  "information_text_name": "Solution Set name",
+  "information_description": "Description",
+
+  "elementCount": "It contains {{count}} elements"
+}

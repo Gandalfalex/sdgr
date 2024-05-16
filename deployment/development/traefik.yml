@@ -1,0 +1,33 @@
+log:
+  level: TRACE
+
+api:
+  dashboard: true
+
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    watch: true
+    network: sus-network
+    defaultRule: "Host(`{{ trimPrefix `/` .Name }}.docker.localhost`)"
+    
+http:
+  middlewares:
+    django-stripprefix:
+      stripPrefix:
+        prefixes:
+          - "/django"
+    springapp-stripprefix:
+      stripPrefix:
+        prefixes:
+          - "/springboot"
+    hugo-site-strippprefix:
+      stripPrefix:
+        prefixes:
+          - "/docs"

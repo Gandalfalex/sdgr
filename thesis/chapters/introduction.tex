@@ -1,0 +1,51 @@
+% !TeX program = xelatex
+
+\chapter{Einleitung}
+Die Bedeutung synthetischer Daten wurde bereits in den frühen Entwicklungsphasen autonomer Fahrzeuge in den 1980er Jahren deutlich. 
+Ein markantes Beispiel hierfür ist der "Navlab I" \cite{NeuralNe96:online}, ein experimentelles autonomes Fahrzeug der Carnegie Mellon University, welches mit vier leistungsstarken Computern ausgestattet 
+über den Campus fuhr und somit eine Schlüsselrolle in der Evolution der künstlichen Intelligenz spielte. Die Herausforderung, verschiedene Fahrszenarien allein mit einem Satz von Instruktionen abzudecken, 
+die manuell gesammelt werden mussten, führte zu einem bedeutsamen Paradigmenwechsel hin zum Einsatz von maschinellem Lernen. Dean Pomerleau nutzte, anstatt alle Situationen selbst aufzubauen, ein Set an Daten, 
+um weitere Situationen durch synthetische Daten zu generieren. Seine Pionierarbeit in der Entwicklung neuronaler Netze, die mit synthetischen Straßenbildern trainiert wurden, illustriert eindrucksvoll die wachsende Bedeutung von synthetischen Daten.
+
+In der heutigen Ära, die durch einen erneuten AI-Boom und die Verfügbarkeit von leistungsstarken Computerplattformen gekennzeichnet ist, gewinnen synthetische Daten weiter an Bedeutung. Vor diesem Hintergrund widmet 
+sich diese Arbeit der Untersuchung des Mehrwerts von maschinellem Lernen bei der Generierung von numerischen Datenströmen und stellt diese Methodik der traditionellen Zeitreihenzerlegung gegenüber.
+
+Diese Arbeit untersucht Machine Learning-Methoden im Vergleich zur traditionellen Zeitreihenzerlegung zur Generierung von numerischen Datenströmen, im Kontext des MONITOR-Projekts, das die Entwicklung und Evaluation 
+von Datenpräsentationskonzepten in simulierten Anwendungsszenarien verfolgt. Der Fokus liegt auf der Simulation von Signalen, speziell Sensorwerten, die zeitabhängige Veränderungen in verschiedenen Szenarien modellieren. 
+Ziel ist es, die Wirksamkeit und Effizienz von Machine Learning gegenüber der Time Series Decomposition zu bewerten, Methoden zu analysieren, Anforderungen an entsprechende Software zu formulieren und einen Lösungsansatz 
+basierend auf Machine Learning zu entwickeln. Zusätzlich wird ein bestehender Prototyp zur Sensordatensimulation erweitert, um beide Ansätze zu implementieren und zu vergleichen.
+
+\section{Motivation}
+Die Simulation von Daten stellt eine komplexe Herausforderung dar, die sich durch verschiedene Ansätze charakterisiert und in Genauigkeit, Geschwindigkeit und Komplexität unterscheidet.
+
+Aber zum ersten Thema. Die Frage, welcher Ansatz der richtige ist, hängt von zahlreichen Faktoren ab und ist von entscheidender Bedeutung in einer datengetriebenen Welt.
+
+In den folgenden Kapiteln dieser Arbeit werden verschiedene Methoden zur Generierung synthetischer Daten aus bestehenden Datenquellen diskutiert. Insbesondere rücken generative Modelle, die
+
+bereits in vielen Bereichen der Bild- und Tabellengenerierung eingesetzt werden, in den Vordergrund. Diese Modelle müssen nur einmal trainiert werden und können daraufhin Daten erzeugen, die den Originaldaten sehr nahekommen. 
+Jedoch stellt dies auch hohe Anforderungen an die Rechenkapazität und ist in seiner Komplexität nicht zu unterschätzen. Besonders im Bereich der Zeitreihenanalyse scheinen diese Ansätze noch nicht umfassend erforscht zu sein, 
+was den Einstieg in diesen speziellen Forschungsbereich spannend macht.
+
+Eine Alternative bieten mathematische Modelle, die zwar weniger flexibel, aber deutlich ressourcenschonender sind. Solche Modelle, die bereits in verschiedenen Sektoren wie im Finanzwesen zur Vorhersage von Marktentwicklungen 
+eingesetzt werden, könnten auch zur Rekonstruktion von Zeitreihen genutzt werden. Modelle wie ARIMA oder Facebooks Prophet, die darauf abzielen, Informationen aus Daten zu extrahieren, könnten somit verwendet werden, um eine den 
+Originaldaten nahekommende Zeitreihe zu generieren. Der Vergleich dieser einfacheren Ansätze mit den komplexeren generativen Modellen ist daher ein Kernaspekt dieser Arbeit.
+
+In dieser Masterarbeit sollen die beiden Ansätze, Machine Learning und Zeitreihenzerlegung, gegenübergestellt werden. Beide haben ihre spezifischen Vor- und Nachteile, und die Wahl des geeigneten Ansatzes hängt von den jeweiligen 
+Anforderungen ab. Das Ziel dieser Arbeit ist es daher, Erkenntnisse zu liefern, die die Entscheidungsfindung für die geeignete Methode erleichtern.
+
+Darüber hinaus soll ein Konzept entwickelt und umgesetzt werden, das diese Ansätze praktikabel macht und sie in eine existierende Simulationsumgebung integriert. Dieses Konzept soll nicht nur die technischen Aspekte abdecken, 
+sondern auch benutzerfreundlich gestaltet sein, sodass auch Personen ohne tiefgehende Kenntnisse im Bereich des maschinellen Lernens davon profitieren können. Der Vergleich der Ansätze wird aufzeigen, welcher Weg für bestimmte 
+Anforderungen am besten geeignet ist, und Nutzern helfen, eine fundierte Entscheidung zu treffen.
+
+Diese Arbeit soll nicht nur einen wissenschaftlichen Beitrag leisten, sondern auch praktische Anwendungen in verschiedenen Bereichen ermöglichen, indem sie komplexe Methoden zugänglicher macht. Die Motivation dahinter ist es, 
+ein tieferes Verständnis für die Dynamik und Potenziale beider Ansätze zu schaffen und so die Tür für innovative Anwendungen und Forschung in der Zukunft zu öffnen.
+
+\section{Zielsetzung}
+Es handelt sich um eine zweiteilige Arbeit. Einerseits muss die bestehende Simulationsumgebung in vielen Punkten verändert und erweitert werden, da sie aktuell
+
+nur die Generierung von Daten mittels Zeitreihenzerlegung beinhaltet und fast keine Flexibilität in der Art der gesendeten Daten bietet. Auch muss das Gesamtprojekt durch eine weitere \acf{API} zur Bereitstellung der 
+Methoden des maschinellen Lernens und der Zeitreihenanalyse erweitert werden. Diese muss sich in die bestehende Architektur integrieren lassen und die Möglichkeit bieten, die Daten in derselben Form wie die Zeitreihenzerlegung 
+zu erhalten. Auch steht eine nutzerfreundliche Oberfläche im Vordergrund, welche es gerade fachfremden Nutzern ermöglicht, diese Software zu verwenden.
+
+Auf der anderen Seite steht eine Evaluation der bestehenden Konzepte und Methoden an. Es muss analysiert werden, wann und warum es sinnvoll ist, sich für eine der beiden Varianten zu entscheiden. Hierzu müssen die Vor- 
+und Nachteile der beiden Ansätze gegenübergestellt werden und die Ergebnisse der beiden Ansätze verglichen werden.

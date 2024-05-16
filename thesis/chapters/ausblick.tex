@@ -1,0 +1,48 @@
+% !TeX program = xelatex
+
+\chapter{Ausblick}
+\label{ch:ausblick}
+
+\section{Einführung neuer Modelle}
+In dieser Arbeit lag der Fokus auf rekursiven und generativen Modellen. Variational Autoencoder, die aktuell große Beliebtheit genießen, stellen eine vielversprechende Erweiterung dar. Diese Autoencoder sind besonders effektiv in der 
+Generierung synthetischer Daten, da sie fähig sind, aus erlernten Datenmustern realistische und vielfältige Beispiele zu erzeugen. Für Variational Autoencoder wurde in der Testumgebung bereits ein Grundgerüst entwickelt, 
+jedoch konnte aufgrund zeitlicher Beschränkungen keine umfassende Bearbeitung zur Erzielung aussagekräftiger Ergebnisse vorgenommen werden. Eine Weiterentwicklung in diesem Bereich könnte daher sehr fruchtbar sein.
+
+
+
+\section{Erweiterungsmöglichkeiten innerhalb des \ac{ML} Bereiches}
+In der Auswertung wurde viel über die tsgm Modelle geschrieben. Sie produzierten gute Ergebnisse, nur kamen sie mit Hardwareanforderungen und einer nicht direkt lösbaren Speicherinffizienz.
+Dies macht sie ungeeignet für den Einsatz in der geschriebenen Django API. Wenn sich dieser Umstand ändert, wäre es möglich die tsgm Modelle in die API zu integrieren.
+Hierzu müssten lediglich die Datenbankeinträge dafür erstellt werden. Im Testprojekt sind diese bereits an das in der API genutzte Konzept angepasst worden.
+Da die Modelle auch zeitlich nicht mit den doch relativ kurzen Trainingszeiten der nativen Modelle mithalten können, aber bereits mit weniger Iterationen nutzbare Ergebnisse liefern, wäre hierfür auch noch ein Informationskonzept zu erstellen.
+Der letzte Punkt betrifft wie Erstellung von Projects. Die tsgm Modelle können zwar ebenso aus der Datenbank geladen werden, bemätogen aber einen anderen Ladeprozess.
+Dieser ist weitestgehend integriert, aber kann zeitaufwendig sein. Da lange Prozesse nicht in das REST Prinzip passen, bräuchte es hier eine Websocketschnittstelle, 
+die den Ladeprozess überwacht und die fertig generierten Daten an die Spring API sendet. Da diese aber über das Frontend angesprochen wird, muss dieses auch die Websockets integrieren und ist daher auch zu ändern, wodurch eine grundsätzlich kleine Änderung 
+der Funktionalitäten eine große Änderung der Gesammtarchitektur nach sich zieht.
+
+Darüber hinaus kann auch mit freieren Parametern experimentiert werden. So kann die Anzahl der Neuronen in den Layern verändert werden, oder die Anzahl der Layer selbst.
+Dies bedeutet aber einen enormen Validierungsaufwand, da nicht alle Kobminationen sinnvoll sind oder gar funktionieren. Eine weitere Möglichkeit ist die stärkere Integration von Loss-Funktionen. Diese wird aktuell nur sporadisch genutzt.
+
+Aufgrund von erhobenen Statistiken könnten auch vorschläge erstellt werden. Über ein dynamisches Auswahlverfahren könnten dem Nutzer passende Modelle mit passenden Konfigurationen vorgeschlagen werden, oder das dieser sich um die genauen Parameter zu kümmern hat.
+Hierfür kann ein \acf{LLM} genutzt werden, welches in einem Dialog mit dem Nutzer die Parameter erfragt und direkt mit der API kommuniziert. Dies würde die Nutzerfreundlichkeit enorm erhöhen.
+Die Grundlagen hierfür sind bereits teilweise gelegt, da es eine umfangreiche OpenAPI Definition gibt, mti welcher LLMs umgehen können.
+
+\section{Erweiterungsmöglichkeiten außerhalb des TSA Bereiches}
+Gerade die rekursiven Modelle sind in der Lage eine Forcast zu erstellen. Eine durchaus interessante und praktische Funktion.
+Da dies grundsätzlich auch durch \ac{IMF}s möglich ist, wäre eine mögliche Erweiterung hier auch interessant.
+Während die Grundlagen hierfür in der Testumgebung bereits geschaffen wurden, waren die Ergebnisse noch nicht zufriedenstellend und wurden daher nicht in die Auswertung mit übernommen.
+Dennoch bietet sich hier ein Potzenzial, welches es zu nutzen gilt. Ansätze wie Fouriertransformationen könnten hierbei helfen.
+Modelle wie Prophet könnten weitere interessante Ansätze liefern, welche es zu untersuchen gilt.
+
+\section{Erweiterungsmöglichkeiten innerhalb des Frontends}
+Obwohl die Studie eine insgesamt gute User Experience des Frontends bestätigt, gibt es Bereiche, die verbessert, vereinfacht oder fehlertoleranter gestaltet werden könnten. 
+Der umfangreiche Einsatz von Json Schema bietet zwar flexible Erweiterungsmöglichkeiten für die Funktionalitäten, zeigt jedoch im Bereich der Benutzerunterstützung und Hilfestellungen Grenzen auf.
+
+\section{Testabdeckung}
+Eine Erhöhung der Testabdeckung wäre ein wichtiger Schritt zur weiteren Verbesserung der Anwendung. Dazu ist die Integration von Testcontainern notwendig, sowie die Einbindung einer 
+gemeinsamen Datenbankinstanz in die Testumgebung, um effektive Unit Tests zu ermöglichen.
+
+Für Component- und Systemtests, die auch das Frontend einbeziehen, wären Tools wie Pact und Playwright geeignet. Pact ermöglicht das Testen der Kommunikation zwischen zwei Systemen, 
+indem ein simulierter Pactserver die Anfragen des zu testenden Systems empfängt und entsprechende Antworten liefert. Dieser Prozess kann automatisiert werden. Playwright ist für das Testen des Frontends vorgesehen, wobei ein Browser gestartet wird, der bestimmte Aktionen ausführt und die Ergebnisse überprüft. Diese Tests können direkt in Java integriert und automatisiert ausgeführt werden.
+
+Eine unzureichende Testabdeckung oder das Fehlschlagen von Tests könnte dazu führen, dass die Pipeline automatisch abgebrochen wird, um die Qualität der Anwendung zu gewährleisten.

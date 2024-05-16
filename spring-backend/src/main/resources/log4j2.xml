@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn">
+    <Properties>
+        <Property name="host">host.docker.internal</Property>
+        <Property name="port">12201</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+
+        <Socket name="GELF" protocol="udp" host="${host}" port="${port}">
+            <GelfLayout host="${host}" includeThreadContext="true" includeStackTrace="true">
+                <KeyValuePair key="app_name" value="sus"/>
+            </GelfLayout>
+        </Socket>
+    </Appenders>
+
+    <Loggers>
+        <Root level="INFO">
+            <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="GELF"/>
+        </Root>
+    </Loggers>
+</Configuration>

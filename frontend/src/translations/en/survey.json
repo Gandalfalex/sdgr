@@ -1,0 +1,31 @@
+{
+  "header_usability": "Usability Questions",
+  "key_usability_regular_use": "I think I would use the website/app regularly.",
+  "key_usability_complicated": "The website/app seems unnecessarily complicated to me.",
+  "key_usability_easy_to_use": "I think the website/app is easy to use.",
+  "key_usability_need_support": "I think I would need technical support to be able to use the website/app.",
+  "key_usability_well_integrated": "I think that the various functions of the website/app are well integrated.",
+  "key_usability_inconsistent": "The website/app seems too inconsistent to me.",
+  "key_usability_easy_learning": "I believe that most people can quickly learn how to use the website/app.",
+  "key_usability_cumberstone": "The website/app seems very cumbersome to use.",
+  "key_usability_confident": "I feel very confident using the website/app",
+  "key_usability_learn_a_lot": "I had to learn a lot to get to grips with the website/app.",
+  "header_stressful": "How stressful was the software",
+  "key_stressful_mental_demand": "How mentally demanding was the task?",
+  "key_stressful_physical_demand": "How physically demanding was the task?",
+  "key_stressful_pace": "How hurried or rushed was the pace of the task?",
+  "key_stressful_success": "How successful were you in accomplishing what you were asked to do?",
+  "key_stressful_workload": "How hard did you have to work to accomplish your level of performance?",
+  "key_stressful_emotions": "How insecure, discouraged, irritated, stressed, and annoyed were you?",
+  "header_personal_info": "Personal Information",
+  "key_personal_age": "Age",
+  "key_personal_background": "Professional Background",
+  "key_personal_technical_affinity": "Technical Affinity (from 0=no affinity to 9 very tech affine)",
+  "key_personal_experience": "Experience With Simulation Software",
+  "key_personal_notes": "Notes",
+  "key_personal_task": "Number of task",
+
+  "completed": "completed",
+  "tfyp": "thank you for your participation"
+
+}

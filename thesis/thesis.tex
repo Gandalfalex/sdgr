@@ -1,0 +1,177 @@
+% !TeX program = xelatex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% MCI Thesis Template
+%% Copyright 2018. David Gollasch.
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[
+	11pt, 
+	a4paper, 
+	twoside, 
+	openright, 
+	titlepage=firstiscover, 
+	numbers=noenddot, 
+	BCOR=12mm,
+	headsepline,
+	footsepline, 
+	toc=listof,
+	toc=bibliography
+	]{scrbook}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% 1. Configure Document
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{import}
+
+%todo: Configure Document
+
+\def\doclanguage{german} %english, german, ngerman	
+\def\doctitle{Vergleich datenbasierter Signalgenerierung mittels Machine Learning und Time Series Decomposition}
+\def\doctype{Masterarbeit}
+\def\docdate{\today}
+\def\authorname{Felix Fischer}
+\def\authorbirthday{15-07-1998}
+\def\authorbirthplace{Wernigerode}
+\def\professor{Prof. Dr. rer. nat. habil. Gerhard Weber}
+\def\supervisors{M.Sc. Emma Franziska Etzold}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% 2. Take a Look at the Following Predefined Commands
+%%
+%%	- encoding is utf8 and does not require entities for ä/ö/ü/ß
+%%	- generate the document using XeLaTeX instead of pdfLaTeX 
+%%	- and Biber engine instead of BibTeX
+%%	- Ensure, your TeX distribution is up to date!
+%%
+%%	- BIB-File is located at includes/bibliography.bib
+%%	- abbreviations supported (includes/acronyms.tex)
+%%	- multiple columns supported (multicol)
+%%	- URLs supported (url)
+%%
+%%	- definitions and formulae supported
+%%		USAGE:
+%%		\begin{definition}[<term>]	| \begin{formula}[<term>]
+%%		\label{def:<term>}			| \label{for:<term>}
+%%			<definition text>		| 	 <formula text>
+%%		\end{definition}				| \end{formula}
+%%
+%%	- listings supported (listings)
+%%		USAGE:
+%%		inline:
+%%			\begin{lstlisting}[caption=<caption>, label=lst:<label>]
+%%				<YOUR CODE HERE>
+%%			\end{lstlisting}
+%%		include:
+%%			\lstinputlisting[language=Python]{source_filename.py}
+%%
+%%	- predefined commands for TODOs
+%%		USAGE:
+%%		\todo{This is a sandbox todo.}
+%%		\todo[Wow]{This as well with own labeling.}
+%%		\enhancement{This is an enhancement.}
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%todo: Look into the available commands
+
+\include{includes/commands}
+
+\begin{document}
+\pagenumbering{gobble}
+
+\include{includes/titlepage}
+
+%todo: Include thesis task description here
+% You got it from your supervisor. Scan the document and
+% include it as full-page PDF here. If your task description
+% is larger than 3 pages, consider putting it in the appendix 
+% instead.
+
+\include{includes/confirmation} %todo: Sign the confirmation
+\includepdf[pages=-]{pdfs/Aufgabenstellung_FelixFischer_printed.pdf}
+\cleardoublepage
+\pagenumbering{Roman}
+
+%todo: Write an abstract
+\chapter*{Abstrakt}
+
+Die vorliegende Masterarbeit erforscht die Generierung synthetischer Datenströme unter Einsatz von Machine Learning-Methoden und traditioneller Zeitreihenzerlegung, 
+insbesondere im Kontext des MONITOR-Projekts. Angesichts der zunehmenden Bedeutung synthetischer Daten, wie durch frühe Entwicklungen autonomer Fahrzeuge und deren Einsatz 
+von KI illustriert, widmet sich diese Arbeit der Fragestellung, wie numerische Datenströme effektiv generiert werden können. Dabei liegt der Fokus auf der Simulation von Sensordaten in verschiedenen Szenarien.
+
+Zentraler Bestandteil dieser Arbeit ist der Vergleich zwischen Machine Learning-Ansätzen und traditionellen mathematischen Modellen zur Zeitreihenzerlegung. 
+Beide Methoden werden hinsichtlich ihrer Effizienz, Genauigkeit und Anwendbarkeit in der Simulation von Datenströmen evaluiert. Es wird untersucht, inwieweit generative oder rekursive 
+Modelle im Vergleich zu einfacheren, ressourcenschonenden mathematischen Modellen wie ARIMA oder Empirical Mode Decomposition zur Rekonstruktion von Zeitreihen eingesetzt werden können.
+
+Ein wesentliches Ziel der Arbeit ist die Entwicklung und Implementierung eines Konzepts, das beide Ansätze in einer bestehenden Simulationsumgebung integriert. Dieses Konzept soll nicht nur die 
+technischen Aspekte abdecken, sondern auch benutzerfreundlich gestaltet sein, um auch Nicht-Experten im Bereich des maschinellen Lernens den Zugang zu ermöglichen.
+
+Abschließend zielt diese Arbeit darauf ab, einen wissenschaftlichen und praktischen Beitrag zu leisten, indem sie komplexe Methoden der Datengenerierung zugänglicher macht und tiefere Einblicke 
+in die Dynamik und Potenziale beider Ansätze bietet. Dadurch sollen innovative Anwendungen und Forschungsmöglichkeiten in verschiedenen Bereichen eröffnet werden. Die Ergebnisse dieser Arbeit sollen Nutzern helfen, 
+fundierte Entscheidungen bei der Wahl der geeigneten Methode zur Datenstromgenerierung zu treffen.
+
+
+
+\tableofcontents
+
+\cleardoublepage
+\pagenumbering{arabic}
+
+%todo: Write you thesis content
+\include{chapters/introduction.tex}
+\include{chapters/stateOfTheArt}
+\include{chapters/techniques.tex}
+\include{chapters/personas.tex}
+\include{chapters/anforderungsanalyse.tex}
+\include{chapters/setup.tex}
+\include{chapters/implementation_intro.tex}
+\include{chapters/implementation_java.tex}
+\include{chapters/implementation_django.tex}
+\include{chapters/implementation_react.tex}
+\include{chapters/implementation_test_framework.tex}
+\include{chapters/deployment.tex}
+\include{chapters/auswertung.tex}
+\include{chapters/study.tex}
+\include{chapters/ausblick.tex}
+\include{chapters/conclusion.tex}
+
+
+\cleardoublepage
+\pagenumbering{roman}
+
+\appendix
+
+%todo: Add appendices
+\include{chapters/tables.tex}
+
+% List of Abbreviations
+%todo: Include your abbreviations into includes/acronyms.tex
+
+\label{study_task_ger}
+\include{includes/acronyms}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% THE FOLLOWING WILL GENERATE LISTS AUTOMATICALLY
+% DO NOT CHANGE THE CODE BESIDES THE LISTS' ORDER
+
+% List of Definitions
+% List of Figures
+\listoffigures
+% List of Tables
+\listoftables
+% List of Listings
+\renewcommand{\lstlistlistingname}{Codeverzeichnis}
+\lstlistoflistings
+% List of Formulas
+\renewcommand{\listtheoremname}{Liste an Formeln}g
+\listoftheorems[ignoreall,show={formula}]
+% Bibliography
+\printbibliography %\printbibliography[heading=bibintoc] if ToC entry desired
+
+\end{document}

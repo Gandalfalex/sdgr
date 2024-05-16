@@ -1,0 +1,133 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: sample
+      POSTGRES_PASSWORD: sample
+    networks:
+      - sus-network
+    deploy:
+      replicas: 1
+
+  django:
+    image: <Django>
+    environment:
+      DATABASE_URL: postgresql://db:5432/postgres
+      DATABASE_ALIAS: db
+      REDIS_ALIAS: redis
+      DJANGO_SETTINGS_MODULE: djangoProject.settings
+    ports:
+      - "8000:8000"
+    networks:
+      - sus-network
+    depends_on:
+      - db
+    labels:
+      - traefik.enable=true
+      - "traefik.http.routers.django-backend.rule=(Host(`localhost`) || Host(`t123abcdefg.mooo.com`)) && PathPrefix(`/django`)"
+      - traefik.http.routers.django-backend.entrypoints=web
+      - "traefik.http.middlewares.django-stripprefix.stripprefix.prefixes=/django"
+      - "traefik.http.routers.django-backend.middlewares=django-stripprefix@docker"
+      - "traefik.http.services.django-backend.loadbalancer.server.port=8000"
+    deploy:
+      replicas: 1
+
+  springapp:
+    image: <Spring>
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/postgres
+      SPRING_DATASOURCE_USERNAME: sample
+      SPRING_DATASOURCE_PASSWORD: sample
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      GRAYLOG_GELF_UDP_ADDRESS: graylog:12201
+    ports:
+      - "8080:8080"
+    networks:
+      - sus-network
+    depends_on:
+      - db
+      - django
+    labels:
+      - traefik.enable=true
+      - "traefik.http.routers.spring-backend.rule=(Host(`localhost`) || Host(`t123abcdefg.mooo.com`)) && PathPrefix(`/springboot`)"
+      - traefik.http.routers.spring-backend.entrypoints=web
+      - traefik.http.middlewares.spring-stripprefix.stripprefix.prefixes=/springboot
+      - "traefik.http.routers.spring-backend.middlewares=spring-stripprefix@docker"
+      - "traefik.http.services.spring-backend.loadbalancer.server.port=8080"
+    deploy:
+      replicas: 1
+
+  hugo:
+    image: <Hugo>
+    ports:
+      - "1313:1313"
+    networks:
+      - sus-network
+    labels:
+      - traefik.enable=true
+      - "traefik.http.routers.hugo-site.rule=(Host(`host.docker.internal`) || Host(`t123abcdefg.mooo.com`)) && PathPrefix(`/docs`)"
+      - traefik.http.routers.hugo-site.entrypoints=web
+      - traefik.http.middlewares.hugo-stripprefix.stripprefix.prefixes=/docs
+      - "traefik.http.routers.hugo-site.middlewares=hugo-stripprefix@docker"
+      - traefik.http.services.hugo-site.loadbalancer.server.port=1313
+    deploy:
+      replicas: 1
+
+
+  frontend:
+    image: <React>
+    environment:
+      DJANGO_BACKEND_URL: http://django:8000/django
+      SPRING_BOOT_BACKEND_URL: http://springapp:8080/springboot
+      REACT_APP_WEBSOCKET_URL: ws://nginx/django/ws/
+    ports:
+      - "3000:3000"
+    networks:
+      - sus-network
+    depends_on:
+      - springapp
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
+      - "traefik.http.routers.frontend.rule=Host(`t123abcdefg.mooo.com`)"
+      - "traefik.http.routers.frontend.entrypoints=web"
+    deploy:
+      replicas: 1
+
+  redis: 
+    image: "redis:alpine"
+    networks:
+      - sus-network
+    deploy:
+      replicas: 1
+
+  traefik:
+    image: traefik:v3.0.0-beta5
+    command:
+      - --api.insecure=true
+      - --api.dashboard=true
+      - --providers.docker
+      - --entrypoints.web.address=:80
+      - --providers.docker.network=proxy
+      - --providers.docker.exposedbydefault=true 
+      - --log.level=TRACE
+    ports:
+      - "80:80"
+      - "8090:8090"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.yml:/etc/traefik/traefik.yml
+    networks:
+      - sus-network
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+
+networks:
+  sus-network:
+    driver: overlay
+    external: true

@@ -1,0 +1,8 @@
+
+p
+java:S1192+"NDefine a constant instead of duplicating this literal "Authorization" 3 times.(¦íÍøøÿÿÿÿ8ü³šÿÄ1
+j
+java:S1192+"HDefine a constant instead of duplicating this literal "Bearer " 3 times.(¦íÍøøÿÿÿÿ8ı³šÿÄ1
+o	java:S116"SRename this field "BASE_URL" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(…À÷–8“´šÿÄ1
+
+java:S1186Z"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(£ã‘Ó8Š”ŸÿÄ1

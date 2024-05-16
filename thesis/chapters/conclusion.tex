@@ -1,0 +1,112 @@
+% !TeX program = xelatex
+
+\chapter{Fazit}
+\label{cha:conclusion}
+
+\section{Ergebnisse der Nutzererfahrung}
+\label{sec:results_of_user_experience}
+Die Nutzererfahrung war der zweite wichtige Punkt innerhalb der Arbeit.
+Nutzer müssen ihre Aufgaben möglichst schnell und einfach erledigen können.
+Aus der Studie ließ sich ableiten, dass die Nutzer die Aufgaben recht problemlos erledigen konnten, sobald sie verstanden hatten, was zu tun ist.
+An diesen Punkt zu gelangen, war jedoch nicht immer einfach. Dies ist zwar nicht verwunderlich, da die Nutzer die Aufgaben zum ersten Mal sahen, aber dennoch ein wichtiger Punkt.
+
+Die Ergebnisse der Evaluation zeigen, dass die Zeitreihenzerlegung in den meisten Fällen bessere Ergebnisse liefert. Dies ist vor allem darauf zurückzuführen, 
+dass die Zeitreihenzerlegung die Datenpunkte der Originaldaten nicht verändert, sondern nur deren Anzahl reduziert. Die generativen Modelle hingegen erzeugen neue Datenpunkte, die nicht 
+immer den Originaldaten entsprechen. Dies führt zu einer höheren Abweichung der generierten Daten von den Originaldaten.
+
+\section{Auswertung der umgesetzten Anforderungen}
+Zu Beginn der Arbeit wurde eine Liste an Anforderungen (siehe \ref{list:requirements}) aufgestellt, welche im Verlauf der Arbeit erfüllt werden sollten. 
+Diese Anforderungen werden nun einzeln ausgewertet.
+
+\paragraph*{Vielseitige Datenintegration und Unterstützung mehrerer Datenformate}
+Die Software unterstützt Datenformate wie CSV, JSON und NumPy-Arrays, welche einen großen Teil der gängigen Datenformate für Zeitreihen abdecken sollten.
+Die Daten können über die Weboberfläche oder über die \ac{REST} \ac{API} importiert werden, beispielsweise über Tools wie curl oder Postman\footnote{Postman ist eine API-Plattform, \url{https://www.postman.com/}}.
+
+\paragraph*{Effiziente Datenübertragung, -validierung und Systemressourcennutzung}
+Die Datenübertragung, insbesondere im Frontend, ist zweiteilig aufgebaut. Grundsätzlich können die Daten in einem separaten Bereich hochgeladen und durch die Django-API überprüft werden. 
+Die zweite Möglichkeit, Daten hochzuladen, besteht bei der Erstellung von Konfigurationen. Um die Datenübertragung hier möglichst gering zu halten, werden die Daten erst hochgeladen, wenn die Konfiguration vollständig ist. Der Preview ist hiervon ausgenommen.
+Um die Anzahl an Datenbankoperationen möglichst gering zu halten und damit die Ressourcenauslastung niedrig, werden hier Daten nur gecacht und nicht persistiert, sofern keine bereits persistenten Daten vorhanden sind.
+Das Konzept der Datenvalidierung wurde in Sektion \ref{sec:djangoDataPreprocessing} genauer erläutert.
+
+\paragraph*{Benutzerorientierte Datenauswahl und -vorverarbeitung sowie Verwaltung:}
+Um die Datenauswahl für Nutzer flexibel zu gestalten, wurde ein zweischneidiges Konzept implementiert. 
+Da gerade bei Zeitreihen die Datenmenge schnell sehr groß werden kann, werden nur die einzelnen Zeitreihen an die Konfiguration angehängt, um ungewollte Daten in einer Konfiguration zu vermeiden.
+Um dennoch die Datenauswahl effektiv zu gestalten, sind alle Zeitreihen an ein Dokument gebunden, welches referenziert werden kann und alle Zeitreihen enthält. Dies kann auch in der passenden Übersicht den gewünschten Anforderungen angepasst werden.
+
+Die Vorverarbeitungsschritte werden dem Nutzer über anpassbare und erweiterbare JsonSchemas zur Verfügung gestellt. Diese sind in der Django-API einfach erweiterbar.
+Es existieren Imputations- sowie Transformationsalgorithmen, welche die Daten vorverarbeiten können. Der Nutzer hat hier freie Auswahlmöglichkeiten und kann die Transformationsalgorithmen seinen speziellen Anforderungen anpassen.
+
+\paragraph*{Visuelles Feedback, Datenexploration und transparente Ergebnisdarstellung}
+Für visuelle Rückmeldungen wurde viel mit Graphen und Diagrammen innerhalb der Weboberfläche gearbeitet. Diese sind teilweise interaktiv und erlauben somit einen tiefen Einblick in die Unterschiede, 
+die beispielsweise durch die Datenverarbeitung entstehen.
+Für die Fehlerbehandlung wurde eine eigene Komponente dem Frontend hinzugefügt. Die Fehlermeldungen aus den APIs sind standardisiert und auch mit i18n-Keys versehen, wodurch die spezifischen Fehler direkt in der Nutzersprache angezeigt werden können.
+Durch die Implementierung von Websockets ist eine direkte Status-/Fortschrittsanzeige möglich, welche den Nutzer über den aktuellen Stand der Verarbeitung informiert.
+
+
+\paragraph*{Sicherheit, Privatsphäre und sicherer Umgang mit Benutzerdaten}
+Die Sicherheit der Anwendung ist mehrschichtig aufgebaut. Ein zentraler Punkt sind die APIs, die sowohl durch JWT-Authentifizierung als auch durch \ac{CSRF}- und \ac{CORS}-Richtlinien geschützt sind. 
+Invalide Tokens haben nur Zugriff auf wenige öffentliche Endpunkte.
+Die Weboberfläche ist durch Routenschutz abgesichert und lässt nicht eingeloggte Nutzer lediglich auf die Login-Seite. Aktuell ist die Anwendung nur über HTTP erreichbar, jedoch kann Traefik 
+problemlos konfiguriert und mit entsprechenden Zertifikaten ausgestattet werden.
+
+Die spezifischen Daten der Nutzer werden in der Datenbank gespeichert, allerdings wurde auf eine zusätzliche Verschlüsselung der einzelnen Datenbankspalten verzichtet. Der Zugriff auf die 
+entsprechenden Daten ist über die API nur für berechtigte Nutzer möglich, während die Datenbank selbst durch Docker Compose abgesichert ist und keinen Port nach außen freigibt, also nur innerhalb des Docker-Netzwerks erreichbar ist. Dies sollte ein ausreichendes Sicherheitsniveau für die Nutzerdaten bieten.
+
+\paragraph*{Trainieren der Modelle und Bereitstellung einer Vielzahl von Algorithmen}
+Im Frontend werden aktuell vier verschiedene \ac{ML}-Algorithmen zur Datengenerierung angeboten, von denen zwei rekursiv und die anderen beiden generativ sind. Für die Tests wurden fünf 
+weitere Modelle geprüft: zwei rekursive und drei generative. Die rekursiven Modelle könnten direkt in die Anwendung integriert werden, während die generativen Modelle aufgrund unzureichender Performance bezüglich der genutzten Hardware nicht Bestandteil der Anwendung sind.
+
+Im Bereich der \ac{TSA} werden \ac{EMD}, \ac{SSA}, Amira und Cubic Spline angeboten. Der Algorithmus Prophet, der in der Testumgebung vorhanden ist, kann jedoch keine synthetischen 
+Daten erzeugen und wurde daher nicht in die Anwendung integriert.
+
+
+\paragraph*{Benutzerschnittstelle, Benutzererfahrung und intuitive Konfiguration der Algorithmen}
+Die Auswertung der SUS- und TLX-Studie (siehe \ref{sec:results_of_user_experience}) zeigt positive Ergebnisse. Der SUS-Score von 76.32 wird als \textit{gut} eingestuft und der 
+TLX-Score von 36.5 deutet auf eine \textit{geringe mentale Belastung} hin, was insgesamt eine gute Benutzererfahrung widerspiegelt. Die intuitive Konfiguration der Algorithmen wurde durch 
+den Einsatz von JsonSchema erreicht. Allerdings könnte, laut der Thinking Aloud Studie, noch Raum für Verbesserungen bestehen.
+
+\paragraph*{Dokumentation, Fehlerbehandlung, Überwachung und Deployment}
+In der Implementierungsphase wurde die Dokumentation nicht vollständig abgeschlossen. Für die umfassende Dokumentation, die verschiedene Bereiche umspannt, wurde sich für eine Hugo-Dokumentation 
+entschieden. Hugo, ein Static Site Generator, wie in Paragraph \ref{par:hugo} erwähnt, ermöglicht es, komplexe Abhängigkeiten mit Mermaid\footnote{Mermaid ist eine Diagrammsprache, https://mermaid-js.github.io/mermaid/} 
+zu visualisieren. Die Dokumentation liegt in Markdown-Dateien vor und wird bei jedem Deployment aktualisiert und integriert. Die OpenAPI Spezifikation wurde für die Dokumentation der 
+API-Schnittstellen genutzt, zugänglich im lokalen Deployment. Die Swagger.yaml-Dateien werden im externen Anhang bereitgestellt, ebenso wie eine Postman-Konfiguration.
+
+Der Fehlerbehandlungsprozess könnte noch verbessert werden, da nicht alle Fehlercodes übersetzt sind und einige technische Fehlerbeschreibungen für Nutzer unklar sein könnten. Insbesondere 
+die Websocket-Komponenten benötigen eine bessere Fehlerbehandlung.
+
+Das Projekt wird durch Prometheus und Graylog überwacht. Graylog muss initial konfiguriert werden und kommuniziert über das UDP-Protokoll. Sobald eingerichtet, werden Logs angezeigt und können 
+gefiltert werden. Prometheus ist bereits konfiguriert und zeigt die relevanten Metriken an. Die Konfigurationen werden im externen Anhang bereitgestellt und sind Teil des Deployment-Projekts.
+
+Das automatische Deployment erfolgt über einen GitLab Runner und eine entsprechende GitLab-CI-Konfiguration, wobei Docker Images erstellt und auf einem lokalen Server bereitgestellt werden.
+
+
+
+\section{Ergebnisse der Evaluation}
+Aufbauend auf den Ergebnissen aus Kapitel \ref{cha:events_and_evaluation} lässt sich ein Fazit ziehen, das die Ergebnisse zusammenfasst und einen Ausblick auf mögliche weitere Forschungen gibt.
+Die Ergebnisse der Evaluation können in verschiedene Punkte gegliedert werden.
+
+\paragraph*{Effizienz}
+Effizienz ist grundsätzlich ein wichtiges Thema.
+Vergleicht man die beiden Ansätze, so ist die Zeitreihenzerlegung deutlich effizienter als maschinelles Lernen. Dies war jedoch von Anfang an klar. 
+Innerhalb der \ac{ML}-Ansätze gibt es aber auch deutliche Unterschiede. Die nativen Keras-Modelle sind bei weitem effizienter als die aus externen Bibliotheken, nutzen jedoch auch deutlich weniger Parameter.
+Wie jedoch in Sektion \ref{sec:similarity_of_time_series} dargestellt wurde, bedeutet dies keinesfalls schlechtere Ergebnisse. Benötigt man jedoch Daten, die sehr nah an den Originaldaten liegen, 
+so eignen sich rekursive Modelle besonders gut, da sie sehr schnell sind und bereits mit wenigen Iterationen eine gute Nachbildung liefern können.
+
+\paragraph*{Genauigkeit}
+Die Genauigkeit der generierten Daten ist ein weiterer wichtiger Punkt.
+Ziel war es, synthetische Daten zu schaffen, die das Original abbilden, um einen Mehrwert zu bieten. Ausreißer an den falschen Stellen oder grundsätzlich andere Verläufe 
+können beispielsweise zu falschen Schlussfolgerungen führen.
+Betrachtet man daher die Ergebnisse der beiden Methoden, so liefert die Zeitreihenzerlegung in den meisten Fällen eine deutlich bessere Annäherung. Generative Modelle fügen der neuen Zeitreihe 
+Variabilität hinzu, die stark schwankt und von der Anzahl an Trainingsiterationen und der Korrelation der Originaldaten abhängt.
+Rekursive Modelle hingegen liefern eine schnelle Abbildung der Daten, tendieren nicht zum Overfitting und sind in der Lage, auch Prognosen zu treffen.
+
+\paragraph*{Limitationen}
+Das Projekt war recht umfangreich. Es wurden insgesamt 4 \ac{TSA}-Algorithmen und 9 \ac{ML}-Modelle getestet, doch bieten sich hier weitere Möglichkeiten. Auch könnte ein gezieltes 
+Fine-Tuning der Parameter die Ergebnisse in manchen Bereichen deutlich verbessern.
+Sollten die Tests mit viel mehr Daten durchgeführt werden, könnte eventuell auch eine Korrelation zwischen der Komplexität oder Autokorrelation der Daten und ihrer Effizienz und Genauigkeit 
+festgestellt werden. In den Tests wurde zwar eine festgestellt, diese kann aber aufgrund der geringen Datenmenge nicht als allgemeingültig angesehen werden.
+
+
+\subsection{Schlusswort}
+Abschließend lässt sich sagen, dass sowohl ML- als auch TSA-Ansätze ihre Vor- und Nachteile haben. Generative Modelle eignen sich am besten für ähnliche Daten, während rekursive Modelle und TSA-Algorithmen 
+sich den Originaldaten schnell annähern, aber schneller und ressourceneffizienter sind. Diese Nachteile können durch sorgfältige Auswahl des Algorithmus und geeignete Vorverarbeitungsschritte ausgeglichen werden.

@@ -1,0 +1,166 @@
+% !TeX program = xelatex
+
+\chapter{Aufbau}
+\label{cha:setup}
+\section{Überblick über die Infrastruktur}
+\label{sec:infrastruktur}
+Die ursprüngliche Anwendung setzte sich aus einer RESTful-API und einer \acl{SPA} für das Frontend zusammen. 
+Für die Entwicklung des Frontends kam React zum Einsatz, ein Framework zur Gestaltung von Benutzeroberflächen, das 2013 von Meta veröffentlicht wurde \cite*{TheHisto67:online}. 
+Dieses Framework ermöglicht insbesondere die Wiederverwendung von Komponenten, den fundamentalen Bausteinen der Benutzerschnittstelle. Die Wiederverwendbarkeit und Erweiterbarkeit der 
+Komponenten sind entscheidende Prinzipien in React. Ergänzend dazu bieten Bibliotheken wie \acl{MUI}, die in diesem Projekt verwendet wurden, eine Sammlung vorgefertigter Komponenten an.
+
+Das Backend wurde unter Verwendung von Spring Boot konzipiert, einem Tool, das auf dem Spring-Framework basiert und 2014 eingeführt wurde \cite*{SpringBo22:online}. Spring Boot erleichtert die 
+Erstellung autonomer Microservices, die in der Java Virtual Machine (JVM) laufen und mit einem integrierten Tomcat-Webserver sowie einer Konfiguration ausgestattet sind, 
+die zahlreiche Komponenten des Spring-Ökosystems zusammenführt.
+
+Für die Datenpersistenz kam PostgreSQL zum Einsatz, ein relationales Datenbanksystem, das eine verlässliche Datenspeicherung bietet. Um Signale zu versenden, wurde Kafka, eine verteilte Event-Streaming-Plattform, verwendet.
+
+Die bestehende Infrastruktur, basierend auf einem Technologie-Stack aus React, Spring und PostgreSQL erfordert Erweiterungen, um die Integration von Machine Learning und Zeitreihenanalyse zu ermöglichen.
+
+Wie in Abbildung \ref*{fig:setup} schematisch dargestellt, erfordert die Erweiterung des Projekts ein zusätzliches REST-Framework. Django, ein auf Python basierendes Webframework, 
+das 2005 veröffentlicht wurde, soll in das System integriert werden und für das Training der Machine-Learning-Modelle verantwortlich sein.
+Graylog wird erst durch die Einführung von Microservices notwendig und dient dazu, die Protokolle der verteilten Systeme zu erfassen.
+Prometheus wird als Monitoring-Tool eingesetzt, um die Überwachung der jeweiligen Container zu gewährleisten.
+Redis, ein Key-Value-Datenspeicher, ermöglicht Caching und den Betrieb von Multithreading-Operationen über Websockets.
+Traefik fungiert als Reverse-Proxy und regelt die Kommunikation zwischen den verschiedenen Diensten bzw. Containern.
+
+Das Ziel dieser neuen Container und Werkzeuge ist es, ein stabil laufendes und wartbares System zu schaffen.
+
+
+\section{Microservice-Architektur}
+Die Microservice-Architektur ist eine methodische Innovation in der Softwareentwicklung, die eine Anwendung in eine Kollektion von kleineren, unabhängigen Diensten aufspaltet. 
+Diese Dienste, bekannt als Microservices, sind für spezifische Funktionen oder Geschäftslogiken verantwortlich und können unabhängig voneinander entwickelt, bereitgestellt und skaliert werden. 
+Die Kommunikation zwischen diesen Diensten erfolgt über wohldefinierte Schnittstellen, meist RESTful APIs, die eine hohe Interoperabilität gewährleisten. 
+Auch erlauben Microservices polyglotte Programmierung, dies bedeutet, dass Microservices in unterschiedlichen Sprachen und mit unterschiedlichen Technologien implementiert werden können.
+
+
+Diese Art der Architektur steht im Kontrast zu monolithischen Systemen, in denen alle Komponenten einer Anwendung eng miteinander in einer einzigen Codebasis integriert sind. 
+Monolithen bieten zwar Vorteile wie die Wiederverwendung von Code und eine einheitliche Entwicklungs- und Deployment-Umgebung, sie sind jedoch in Bezug auf Skalierbarkeit und Flexibilität limitiert. 
+Skalierung ist bei Monolithen oft nur vertikal möglich, was bedeutet, dass man die Ressourcen eines einzelnen Servers erhöht, im Gegensatz zum horizontalen Skalieren bei Microservices, wo man die Last auf mehrere Server verteilen kann.
+
+In diesem spezifischen Anwendungsfall ermöglicht die Microservice-Architektur eine sinnvolle Skalierbarkeit, indem beispielsweise Dienste für das Training von Machine Learning Modellen auf leistungsstarken Servern betrieben werden, 
+während einfachere CRUD-APIs\footnote{CRUD-API bezieht sich auf eine \ac{API}, welche hauptsächlich für Datenbankoperationen zuständig ist} auf weniger leistungsfähigen Systemen laufen können. 
+So könnte ein Django-Service für Machine Learning und Zeitreihenzerlegung zuständig sein, während ein Spring-Service sich auf das Erstellen und Versenden von Datenstreams konzentriert.
+
+Die Flexibilität der Microservice-Architektur erleichtert zudem die Integration neuer Technologien und Ansätze. Da jeder Service unabhängig ist, können Innovationen in einem Service implementiert werden, ohne von bestehenden Systemen oder Technologiestacks beeinträchtigt zu sein. 
+Dies fördert eine kontinuierliche Weiterentwicklung und Anpassung an neue Anforderungen.
+
+Zusammenfassend bietet die Microservice-Architektur eine starke Grundlage für moderne, skalierbare und flexible Softwareentwicklungsprojekte. 
+Sie unterstützt eine dezentralisierte Entwicklungsstrategie, die Anpassungen und Skalierungen erleichtert und dabei hilft, die technische Schuld zu minimieren, indem sie die Unabhängigkeit von Diensten gewährleistet.
+
+\section{Technologie-Stack} 
+\paragraph{Apache Kafka}
+Apache Kafka, ein leistungsstarkes Open-Source-Stream-Processing-System, bildet das Herzstück dieses Projekts für die Verarbeitung von Datenströmen in Echtzeit. 
+Es fungiert als zentrale Austauschplattform, die eine effiziente und zuverlässige Datenübertragung zwischen den Datenproduzenten (Producers) und den Datenkonsumenten (Consumers) ermöglicht. 
+Somit kann die Datenübertragung der Signale, die zeitrelevant und kontinuierlich erfolgen muss, abgesichert und kann durch neue Consumer unabhängig auf verschiedenen Plattformen genutzt werden.
+
+\paragraph{Docker}
+\label{sec:docker}
+Docker hat sich als eine transformative Technologie in der Welt der Softwareentwicklung etabliert, die es ermöglicht, Anwendungen in Containern zu verpacken. 
+Diese Container sind leichtgewichtige, eigenständige Pakete, die alles enthalten, was eine Anwendung zum Laufen benötigt, von Umgebungsvariablen und Konfigurationsdateien bishin zu Code, Laufzeitumgebung und den genutzten Bibliotheken. 
+Docker vereinfacht damit die Bereitstellung und den Betrieb von Anwendungen, indem es für Konsistenz über verschiedene Entwicklung, Release-Zyklen und Cloud-Umgebungen hinweg sorgt.
+
+Der Einsatz von Docker im Projekt bietet entscheidende Vorteile: Es ermöglicht, dass das Projekt praktisch überall ausgeführt werden kann, unabhängig von spezifischen Hardwarekonfigurationen. 
+Dies ist besonders nützlich in heterogenen Umgebungen, wo die Unterstützung verschiedener Betriebssysteme und Plattformen erforderlich ist. Docker ermöglicht auch eine erhebliche Skalierbarkeit, 
+vor allem in Verbindung mit einer Microservice-Architektur. In solch einem Ökosystem kann Docker dazu beitragen, die Anwendungen leicht skalierbar und wartbar zu machen. 
+Mit Docker können auch Aktualisierungszyklen beschleunigt werden, da neue Versionen schnell und automatisiert bereitgestellt werden können, was für 
+kontinuierliche Integration und kontinuierliche Bereitstellung (CI/CD) von entscheidender Bedeutung ist. 
+Auch ermöglichen Techniken wie Blue-Green-Deployment eine nahtlose Umschaltung zwischen verschiedenen Versionen der Anwendung, was das Risiko bei der Bereitstellung neuer Versionen minimiert.
+
+Docker Compose ist ein Tool, das das Management von Multi-Container-Anwendungen vereinfacht. Mit einer einzigen Konfigurationsdatei können Entwickler die Dienste, Netzwerke und Volumes definieren, die für ihre Anwendung erforderlich sind. 
+Dies ist ideal für Single-Host-Deployments, welches für die Anwendung vorerst vorgesehen ist, und bietet die Flexibilität, unterschiedliche Konfigurationen für Entwicklung und Produktion zu definieren. 
+Docker Compose erleichtert auch das Starten, Stoppen und Neubauen von Diensten und die Skalierung von Containern.
+
+Für größere Deployments bietet Docker Swarm eine native Cluster-Verwaltungsfunktionalität, die Docker-Hosts zu einem virtuellen Single-Host macht. 
+Swarm nutzt die Docker-API, was bedeutet, dass jede Software, die bereits mit Docker funktioniert, ohne Anpassungen mit Docker Swarm verwendet werden kann. 
+Es orchestriert die Container, die auf einer Gruppe von Hosts ausgeführt werden, und enthält Dienste wie Load Balancing, die Anfragen über die Knoten hinweg verteilen.
+
+Insgesamt bietet Docker eine effiziente, skalierbare und sichere Lösung für die Verpackung und Ausführung von Anwendungen, 
+die die Art und Weise, wie Software entwickelt und betrieben wird, revolutioniert hat. Mit seinen Tools und Ökosystemkomponenten ist Docker eine ausgezeichnete 
+Wahl für moderne Softwareprojekte, die schnelle Iterationen und eine hohe Verfügbarkeit erfordern.
+
+
+
+\paragraph{Graylog}
+Graylog, ein zentrales Log-Management-Tool, dient als eine entscheidendes Tool in der Systemarchitektur.
+Als Open-Source-Plattform konzipiert, ermöglicht Graylog die automatisierte Zentralisierung, Sammlung und Analyse von Log-Daten. 
+Spezifisch im Projekt spielt Graylog eine kritische Rolle bei der Überwachung der Kommunikation zwischen verschiedenen APIs, dem Frontend und der Datenbank. 
+Durch die zentrale Erfassung von Logs bietet Graylog Einblicke in Systemereignisse und unterstützt so die Fehlerdiagnose und Optimierung des Systembetriebs.
+
+Graylog baut auf dem ELK-Stack auf, einer Kombination aus Elasticsearch, Logstash und Kibana, die eine effiziente Log-Aggregation, -Analyse und -Visualisierung auf Systemebene ermöglicht. 
+Der ELK-Stack wird häufig für umfassende Logging-Lösungen verwendet, wobei Graylog eine alternative Schnittstelle bietet, die auf ähnlichen Technologien basiert 
+und darauf ausgerichtet ist, die Handhabung und Verarbeitung von Log-Daten zu vereinfachen.
+
+Die Einrichtung eines zentralen Log-Management-Tools wie Graylog ist entscheidend für die Aufrechterhaltung der Systemintegrität, besonders in einer 
+komplexen Microservice-Architektur. Durch die Konsolidierung der Logs an einem zentralen Punkt erleichtert Graylog das Monitoring und die Analyse von 
+verteilten Systemen, was bei der Fehlersuche, Leistungsoptimierung und Sicherheitsüberwachung unerlässlich ist. Mit seinen leistungsstarken Such- und Analysefähigkeiten 
+hilft Graylog Entwicklern und Systemadministratoren, schnell auf Ereignisse zu reagieren und die Systemstabilität zu gewährleisten.
+
+
+\paragraph{Prometheus}
+Im Jahre 2012 stellte Soundcloud mit Prometheus ein bedeutendes Werkzeug für das Monitoring und Alerting vor, das seither insbesondere in großen und verteilten 
+Systemen breite Anwendung findet. Das Tool ist spezialisiert auf die Sammlung, Speicherung und das Management von Metriken in Zeitreihenform. 
+Diese Fähigkeit ist entscheidend, um einen Überblick über die Gesundheit und Leistung der überwachten Systeme zu erhalten. 
+Bei auftretenden Anomalien ist Prometheus so konzipiert, dass es Warnmeldungen auslöst, um auf potenzielle Probleme hinzuweisen\cite*{Overview70:online}.
+
+In Bezug auf dein aktuelles Projekt ermöglicht Prometheus eine zentralisierte Überwachung der einzelnen Systemkomponenten, wodurch eine sofortige und präzise 
+Diagnose bei Performance-Einbußen oder Ausfällen einzelner Teile des Systems ermöglicht wird. Durch die Analyse der erfassten Daten lassen sich nicht nur kurzfristige 
+Zustände und Fehlfunktionen erkennen, sondern auch langfristige Muster und Trends, die Rückschlüsse auf die Effizienz und Angemessenheit der zugrunde liegenden 
+Infrastruktur zulassen.
+
+
+
+
+\paragraph{Traefik}
+Traefik, ein moderner HTTP-Reverse-Proxy und Load Balancer, wurde speziell für Microservice-Architekturen und deren dynamische Anforderungen entwickelt. 
+Er zeichnet sich durch eine automatische Systemerkennung und Konfiguration aus, was ihn zu einem unverzichtbaren Werkzeug für die reibungslose Verwaltung von 
+Netzwerkanfragen in komplexen Systemen macht. Traefik integriert sich nahtlos mit etablierten Infrastrukturkomponenten wie Docker, Docker Compose und Docker Swarm, 
+wodurch die Verteilung von Anfragen auf die entsprechenden Services vereinfacht wird.
+
+Durch seine intuitive Konfiguration und automatische Serviceerkennung entlastet Traefik Entwickler von manuellen Setup-Prozessen und fördert eine effiziente 
+Bereitstellung von Services. Darüber hinaus bietet Traefik Echtzeit-Einblicke in das Netzwerkverhalten und unterstützt Let's Encrypt für die Automatisierung 
+von SSL/TLS-Zertifikaten, was die Sicherheit erhöht. Durch seine Fähigkeit, dynamisch auf Änderungen in der Service-Landschaft zu reagieren, ist Traefik ein 
+essentielles Element in der Toolchain für die Implementierung und den Betrieb von Microservices, das Leistungsfähigkeit mit Benutzerfreundlichkeit vereint.
+
+
+\paragraph{PostgreSQL}
+PostgreSQL ist ein fortschrittliches Open-Source-Datenbanksystem, das für seine Robustheit, Flexibilität und Compliance mit SQL-Standards bekannt ist. 
+Es bietet erweiterte Funktionen, wie komplexe Abfragen, Fremdschlüssel, Trigger, updatable Views und Transaktionen mit hoher Integrität. PostgreSQL eignet sich 
+besonders gut für Aufgaben, die komplexe Datenverarbeitungen erfordern und bei denen die Datenkonsistenz von höchster Wichtigkeit ist. 
+Die Architektur unterstützt sowohl relationale als auch JSON-Datentypen, was es zu einer vielseitigen Wahl für vielfältige Anwendungsfälle macht.
+
+\paragraph{Redis}
+\label{sec:redis}
+Redis ist ein Open-Source-Key-Value-Datenspeicher, der für seine Geschwindigkeit, Flexibilität und Vielseitigkeit bekannt ist. 
+Es ist ein NoSQL-Datenspeicher, der Daten in einem Schlüssel-Wert-Format speichert und eine Vielzahl von Datenstrukturen unterstützt, darunter Strings, Hashes, Listen, Sets und geordnete Sets.
+Redis ist besonders gut für Anwendungen geeignet, die eine hohe Leistung erfordern, da es die Daten im Arbeitsspeicher speichert und so eine schnelle Datenverarbeitung ermöglicht. Im aktuellen Projekt wird Redis für Websockets eingesetzt.
+
+
+\paragraph{Gitlab CI und Gitlab Runner}
+Gitlab bietet über eigene, sogenannte Pipelines, die Möglichkeit kontinuierlich Software zu testen und auszurollen.
+Dank \acf{CICD} kann der auf Gitlab hochgeladene Code gebaut, getestet und, je nach Konfiguration des dafür eigens angelegten .gitlab-ci Files, deployed werden.
+Es ist ein hilfreiches Tool um die Qualität der Software aufrecht zu erhalten und darüber hinaus ständig eine funktionierende Version aufrufbar zu haben.
+
+\paragraph{Hugo}
+\label{par:hugo}
+Hugo ist ein Open-Source-Static-Site-Generator, der 2013 von Steve Francia veröffentlicht wurde. Er erlaubt das Erstellen von statischen Webseiten, die aus Markdown-Dateien generiert werden.
+Somit lässt sich eine einfach und schnelle Dokumentation erstellen, die zudem noch leicht zu pflegen ist. In kombination mit einen Nginx\footnote{Nginx ist ein Webserver, der sich durch seine hohe Performance auszeichnet. Er dient hier als static file Server.} 
+kann die Dokumentation auf einem Server gehostet werden und somit direkt an das Gesammtproject angebunden werden.
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.1\linewidth]{includes/figures/system_overview.png}
+    \caption{Aktuelle Infrastruktur, sie verbindet das Frontend mit beiden APIs, welche Zugriff auf die PostgreSQL Datenbank haben. Überwacht werden sie von Prometheus und Graylog. Ein Kafka Producer wird genutzt um die genierierten Daten als Streams an entsprechende Consumer zu senden. Redis dient als Cache für die Websockets des Django-Channel Frameworks. Hugo wird genutzt um die Dokumentation zu generieren und über Nginx verfügbar zu machen. Dies alles  wird in Docker Containern ausgeführt.}
+\label{fig:setup}
+\end{figure}
+
+
+\section{Zusammenfassung}
+In diesem Kapitel wurde kurz die Architektur des Projekts präsentiert um dieses in einem produktiven Betrieb effizient nutzen zu können.
+Hierbei wurde auf die Wahl einer Microservice-Architektur eingegangen und die einzelnen Komponenten vorgestellt. 
+Es exiszieren somit neben den normalen Komponenten wie Front- und Backend auch Elementen, die sich um das Datenmanagement kümmern, wie PostgreSQL, Kafka und Redis.
+Um die Anwendung zu überwachen und zu warten, werden Prometheus und Graylog eingesetzt. Wichtig für die flexible Inbetriebnahme sind die Komponenten aus dem DevOps Bereich, wie Docker, Docker Compose und Traefik.
+Damit diese Schritte automatisiert werden können, wird Gitlab CI und Gitlab Runner eingesetzt. Zur Darstellung der Dokuemntation dient Hugo, neben der OpenAPI und Swagger Dokuemntation.
+
+All diese Elemente sollten helfen, die Anwendung zuverlässig und stabil zu betreiben und die Wartungskosten zu minimieren.

@@ -1,0 +1,13 @@
+
+n
+java:S2259|"SA "NullPointerException" could be thrown; "getSessionAttributes()" can return null.(Ž¢ß”þÿÿÿÿ
+n
+java:S2259u"SA "NullPointerException" could be thrown; "getSessionAttributes()" can return null.(Ž¢ß”þÿÿÿÿ
+X
+java:S1854u"=Remove this useless assignment to local variable "userEmail".(Ž¢ß”þÿÿÿÿ
+I
+java:S1481u".Remove this unused "userEmail" local variable.(Ž¢ß”þÿÿÿÿ
+X
+java:S1854|"=Remove this useless assignment to local variable "userEmail".(Ž¢ß”þÿÿÿÿ
+I
+java:S1481|".Remove this unused "userEmail" local variable.(Ž¢ß”þÿÿÿÿ

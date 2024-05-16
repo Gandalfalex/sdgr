@@ -1,0 +1,21 @@
+sequenceDiagram
+    participant Controller
+    participant WebSocketEventService
+    participant MessagingTemplate
+    participant ProjectService
+    participant SendDataThread
+
+    Controller->>WebSocketEventService: getEventStream(project.getId())
+    WebSocketEventService-->>Controller: Event Stream
+    loop For each event
+        Controller->>MessagingTemplate: convertAndSend("/topic/responses/" + project.getId(), event)
+    end
+    Controller->>ProjectService: startMessageSending(project, userEmail)
+    ProjectService->>SendDataThread: new SendDataThread(...)
+    SendDataThread->>WebSocketEventService: emitEvent(uuid, trackStatus)
+    WebSocketEventService->>MessagingTemplate: convertAndSend("/topic/responses/" + uuid, event)
+    loop Data Sending
+        SendDataThread->>MessagingTemplate: send(data)
+    end
+    SendDataThread-->>ProjectService: Sending Complete
+    ProjectService-->>Controller: Finished Message Sending Process

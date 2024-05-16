@@ -1,0 +1,29 @@
+<!-- prettier-ignore-start -->
+{{ if not (.Page.Scratch.Get "mermaid") }}
+  <!-- Include mermaid only first time -->
+  <script defer src="{{ index (index .Site.Data.assets "mermaid.js") "src" | relURL }}"></script>
+  {{ .Page.Scratch.Set "mermaid" true }}
+{{ end }}
+<!-- prettier-ignore-end -->
+
+<pre class="gdoc-mermaid mermaid{{ with .Get "class" }}{{ printf " %s" . }}{{ end }}">
+  {{- .Inner -}}
+</pre>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Mermaid
+    mermaid.initialize({startOnLoad:true});
+
+    // Apply zoom after Mermaid diagrams have rendered
+    setTimeout(function() {
+      document.querySelectorAll('.gdoc-mermaid svg').forEach(function(svgElement) {
+        svgPanZoom(svgElement, {
+          zoomEnabled: true,
+          controlIconsEnabled: true
+        });
+      });
+    }, 1000); // Adjust this timeout as necessary
+  });
+</script>

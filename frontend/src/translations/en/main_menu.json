@@ -1,0 +1,18 @@
+{
+  "i18n_home": "Home",
+  "i18n_home_tooltip": "Here you can create and send your data",
+  "i18n_project": "Project",
+  "i18n_project_tooltip": "Here you can create and send your data",
+  "i18n_train_data": "Train Data",
+  "i18n_machine_learning": "Machine Learning",
+  "i18n_machine_learning_tooltip": "Here you can train your models",
+  "i18n_time_series_analysis": "Time series analysis",
+  "i18n_time_series_analysis_tooltip": "Here you can use time series decomposition and analytics",
+  "i18n_training_data_options": "Training data options",
+  "i18n_data": "Data",
+  "i18n_data_tooltip": "Here you can find an overview over all your uploaded files",
+  "i18n_survey": "Survey",
+  "i18n_survey_tooltip": "Nahs",
+  "i18n_documentation": "Documentation",
+  "i18n_documentation_tooltip": "Documentation options"
+}

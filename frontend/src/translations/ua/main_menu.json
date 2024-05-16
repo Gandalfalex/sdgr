@@ -1,0 +1,18 @@
+{
+  "i18n_home": "Домашня сторінка",
+  "i18n_home_tooltip": "Тут ви можете створювати та надсилати свої дані",
+  "i18n_project": "Проект",
+  "i18n_project_tooltip": "Тут ви можете створювати та надсилати свої дані",
+  "i18n_train_data": "Дані для тренування",
+  "i18n_machine_learning": "Машинне навчання",
+  "i18n_machine_learning_tooltip": "Тут ви можете тренувати свої моделі",
+  "i18n_time_series_analysis": "Аналіз часових рядів",
+  "i18n_time_series_analysis_tooltip": "Тут ви можете використовувати декомпозицію та аналітику часових рядів",
+  "i18n_training_data_options": "Опції даних для тренування",
+  "i18n_data": "Дані",
+  "i18n_data_tooltip": "Тут ви можете знайти огляд всіх ваших завантажених файлів",
+  "i18n_survey": "Опитування",
+  "i18n_survey_tooltip": "Nahs",
+  "i18n_documentation": "Документація",
+  "i18n_documentation_tooltip": "Опції документації"
+}

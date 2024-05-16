@@ -1,0 +1,55 @@
+% !TeX program = xelatex
+\chapter{Fragestellung}
+
+Aufbauend auf den bereits existierenden Kenntnissen \dots TODO kurze Conclusion zum State of the Art Teil \dots
+
+% Recherche und Analyse bestehender Literatur und aktuellen Möglichkeiten, um Daten basierend auf existierenden Datensätzen zu erzeugen, mit besonderem Augenmerk auf ML und TSD/TSA
+
+
+
+\section{Anforderungsermittlung für eine Software, die Daten auf Grundlage eines bestehenden Datensatzes simuliert}
+
+Die Software richtet sich an Personen, die mit einem speziellen Vorwissen im Bereich der Signalverarbeitung ausgestattet sind.
+Aber es handlet sich nicht um Experten und nicht zwangsläufig um Mathematiker. Die Hauptzielgruppe besteht Hauptsächlich aus Ingeneuren.
+
+Aufbauend auf dieser Annahme muss folgende Punkte besonders geachtet werden:
+
+\begin{enumerate}
+    \item Einfache und Effiziente UI 
+    \item Konfigurationsmöglichkeiten der Daten 
+    \item Wiederholbarkeit der Versuche
+    \item Persistenz der Daten und Ergebnisse
+    \item Effizienz der Generierung
+\end{enumerate}
+
+
+
+\subsection{Einfache und Effiziente UI}
+
+Nicht zwangsläufig Experten Nutzer -> Sollten Begrifflichkeiten kennen bzw den Sinn dahinter verstehen, aber werden nicht ständig mit der Software arbeiten 
+-> Schritte müssen einfach und Nachvollziehbar sein
+-> muss ohne großen Aufwand wieder 'erlernbar sein'
+-> themen sind relativ abstrackt, viel visuelle Unterstützung bieten
+
+Schneidermans 8 golden Rules of User Interface Design mit einbringen
+
+\subsection{Konfigurationsmöglichkeiten der Daten}
+Dies ist an 2 Stellen möglich, einerseits in Ursprünglicher Software über datasets und dann nochmal in den jeweiligen ML/TSD implmentationen
+
+Einfachheit, Erklärung der jeweiligen Komponenten, eventuell deren Einfluss angeben (Nutzer nicht zwangsläufig im Bereich ML/TSD bewandert)
+
+
+\subsection{Wiederholbarkeit der Versuche}
+Versuche oder Simulationen müssen einsehbar und Konstant sein. Kein Mehrwert wenn Abweichung zwischen den Simulationen zu groß ist
+
+
+\subsection{Persistenz der Daten und Ergebnisse}
+Es handelt sich um eine Webanwendung, teilweise computational demanding 
+
+Modelle müssen gespeichert werden, wiederaufrufbar sein
+TestDaten müssen gespeichert werden und über mehrere Modelle zugänglich
+-> Daten müssen an Nutzer gebunden sein (Ideal wäre vermutlich Nutzergruppe..? Hier könnte man diskutieren)
+
+
+
+\section{Konzeption einer Lösung, um Daten mittels Maschine Learning zu generieren, um so Sensoren zu simulieren}

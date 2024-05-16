@@ -1,0 +1,44 @@
+{
+  "search": "Пошук",
+  "graphic_train_data_display": "Показати графічне представлення тренувальних даних",
+  "move_to": "Перейти до проекту",
+  "delete_directly": "Ви можете безпосередньо видалити набір даних звідси",
+  "login_f_name": "Ім'я",
+  "login_s_name": "Прізвище",
+  "login_e_mail": "Електронна адреса",
+  "login_pass": "Пароль",
+  "sign_up": "Зареєструватися",
+  "login": "Увійти",
+
+  "log_message": "Повідомлення",
+  "log_time": "Час (в UTC)",
+  "log_session": "Сесія",
+  "log_dataset": "Набір даних",
+  "log_no_record": "Дані ще не записані",
+
+  "single_value_position": "Позиція",
+  "single_value_value": "Значення",
+  "single_value_delete_entry": "Видалити запис",
+
+  "data_set_common_samples": "Зразки",
+  "data_set_common_frequency": "Частота [Hz]",
+  "data_set_common_season": "Сезон",
+  "data_set_common_trend": "Тренд",
+  "data_set_common_residual": "Решта",
+  "data_set_common_alphabet": "Алфавіт",
+  "data_set_common_sleep_time": "Час сну",
+  "data_set_headline_info": "Інформація",
+  "data_set_headline_graph": "Попередній перегляд графіка",
+
+  "data_set_headline_individual": "Індивідуально визначені значення",
+  "data_set_no_preview": "Індивідуально визначені значення",
+  "data_set_graph": "Графік",
+  "data_set_logs": "Логи",
+  "data_set_datasets": "Набір даних",
+
+  "data_type_select": "Виберіть свій тип даних",
+  "find_training_data_label": "Знайдіть свої тренувальні дані",
+  "information_text_name": "Назва набору рішень",
+  "information_description": "Опис",
+  "elementCount": "Воно містить {{count}} елементів"
+}

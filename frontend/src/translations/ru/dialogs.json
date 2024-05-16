@@ -1,0 +1,72 @@
+{
+  "button_label": {
+    "cancel": "Отмена",
+    "ok": "Ок",
+    "copy": "Копировать",
+    "update": "Обновить",
+    "delete": "Удалить",
+    "send": "Отправить",
+    "next": "Далее",
+    "create": "Создать",
+    "upload": "Загрузить",
+    "confirm": "Подтвердить",
+    "start": "Начать",
+    "back": "Назад",
+    "login": "Войти в систему",
+    "logout": "Выйти из системы",
+    "finish": "Завершить"
+  },
+
+  "new_track": "Создать новый трек",
+  "update_track": "Обновить трек",
+  "new_project": "Создать новый проект",
+  "new_data_set": "Создать новый DataSet",
+  "new_ml_config": "Создать новый проект машинного обучения",
+  "new_tsa_config": "Создать новый проект для анализа временных рядов",
+  "new_data": "Загрузить новый файл TrainingData",
+  "project_sending": "Ваш проект в данный момент отправляется",
+  "project_not_sending": "Ваш проект в данный момент не отправляется",
+  "delete_success": "Проект удален",
+  "update_success": "Элемент обновлен",
+  "copy_element": "Создана копия элемента",
+  "edit_data_set": "Редактировать DataSet",
+
+  "confirm_ml_delete_action": "Вы уверены, что хотите удалить свой проект машинного обучения?",
+  "confirm_dataset_delete_action": "Вы уверены, что хотите удалить этот DataSet?",
+  "confirm_tsa_delete_action": "Вы уверены, что хотите удалить свой проект анализа временных рядов?",
+  "confirm_from_model_delete_action": "Вы уверены, что хотите удалить DataSet из вашего проекта?",
+
+  "select_model_step_1": "вам нужно выбрать модель",
+  "select_model_step_2": "вам нужно выбрать конфигурацию",
+  "select_model_step_3": "вам нужно выбрать конфигурацию",
+
+  "ml_start_training": "начало обучения",
+  "ml_finished_training": "обучение завершено",
+  "ml_error_event": "что-то пошло не так",
+  "ml_start_train_tooltip": "Начать обучение вашей модели",
+  "ml_is_training_tooltip": "Обучение в процессе",
+
+  "ml_training_stat_information_time": "Время обучения",
+  "ml_training_stat_information_added_to": "Добавлено к",
+  "ml_training_stat_information_iterations": "Итерации обучения",
+  "ml_training_stat_information_loss": "Точность",
+  "ml_training_stat_information_id": "ML ID",
+
+  "ml_training_configuration_info": "Информация о вашей обученной конфигурации",
+
+  "bar_chart_track_progress": "Оценка прогресса в процентах",
+
+  "dialog_copy_context": "Вы уверены, что хотите скопировать эту конфигурацию?",
+  "dialog_upload_tooltip": "Ваши данные должны быть доступны либо как csv, json, либо numpy array. В случае массивов numpy и csv и наличия меток времени, пожалуйста, называйте их либо 'timestamp', 'date' или другим сходным образом",
+  "dialog_upload_drag_n_drop_message": "Вы можете перетащить свои файлы json, csv или numpy",
+  "multi_dialog_step_info": "Информация",
+  "multi_dialog_step_data": "Данные",
+  "multi_dialog_step_preview": "Предварительный просмотр",
+
+  "dialog_set_information_choose_train_data": "Выберите из ваших существующих данных для обучения",
+  "dialog_set_information_drag_n_drop_train_data": "Перетащите свои собственные файлы",
+
+  "dialog_track_tooltip": "Имя трека: Введите имя трека.\nЕдиница: Введите единицу для трека.\nПовторяющиеся: Проверьте, повторяется ли трек.\nТипы данных: Выберите один или несколько типов данных для трека, если оставить пустым, будут выбраны все.",
+
+  "data_set_list_delete_question": "Вы уверены, что хотите удалить эти обучающие данные?"
+}

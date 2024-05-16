@@ -1,0 +1,22 @@
+{
+  "data_header": "Here you have an overview over your Training Data",
+  "ml_header": "Here you have an overview over your Machine Learning Projects",
+  "ml_models": "Available Models",
+  "tsa_header": "Here you have an overview over your Time Series Analysis Projects",
+  "tsa_models": "Available Models",
+  "project_header": "Here you have an overview over your Projects",
+  "project_models": "Available Projects",
+  "model_usages": "This model is used in following projects:",
+  "select_model": "Select a Model",
+  "select_configuration": "Select a trained configuration",
+  "copy_dialog": "Warning",
+  "custom_value_dialog": "Create new custom value",
+  "delete_dialog": "Warning",
+  "data_types": "Data Types",
+
+  "update_solution": "Update your solution",
+  "add_new_solution": "Add a new solution",
+  "select_files": "Files",
+  "select_items": "Items",
+  "data_set_list_delete_question": "Are you sure to delete this element?"
+}

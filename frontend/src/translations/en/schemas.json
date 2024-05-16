@@ -1,0 +1,47 @@
+{
+  "data_set_name": "The name of the data set.",
+  "data_set_frequency": "The frequency (in Hertz) in which the sample values will be sent.",
+  "data_set_samples": "The number of samples (data points) that this data set consists of.",
+  "data_set_alphabet": "The alphabet, an array of single-character strings.",
+  "data_set_sleep": "the total number of seconds the sender rests.",
+  "data_set_calculation": "Dictates the composition operation that will be used to combine the trend, season, and residual values.",
+
+  "preprocessing": {
+    "linear_slope": "slope",
+    "linear_intercept": "intercept",
+    "linear_time_array": "time",
+    "reduction_max": "max reduction factor"
+  },
+
+  "validation_forms": {
+    "min_length": "minimal length of the dataset, indicates the reduction of each element, smaller values mean faster training time",
+    "config_option": "Choose to use the default configuration or customize the settings for Linear Trend Removal",
+    "forecasting": "Choose the starting point, RNNs need however some value to start predicting",
+    "prediction_length": "Select how many values should be predicted"
+  },
+
+  "errors": {
+    "required": "The field '{{missingProperty}}' is required.",
+    "type": "Incorrect data type. Expected type: {type}.",
+    "enum": "The value must be one of the predefined set: {values}.",
+    "const": "The value must be {value}.",
+    "minLength": "The text is too short. Minimum length is {minLength}.",
+    "maxLength": "The text is too long. Maximum length is {limit}.",
+    "pattern": "The text does not match the required pattern.",
+    "format": "The format is incorrect. Expected format: {format}.",
+    "minimum": "The number is too low. Minimum value is {minimum}.",
+    "maximum": "The number is too high. Maximum value is {maximum}.",
+    "exclusiveMinimum": "The number must be greater than {minimum}.",
+    "exclusiveMaximum": "The number must be less than {maximum}.",
+    "multipleOf": "The number must be a multiple of {multipleOf}.",
+    "minItems": "There are too few items. Minimum is {minItems} items.",
+    "maxItems": "There are too many items. Maximum is {maxItems} items.",
+    "uniqueItems": "Items in the array must be unique.",
+    "contains": "The array must contain a specific item.",
+    "minProperties": "There are too few properties. Minimum is {minProperties}.",
+    "maxProperties": "There are too many properties. Maximum is {maxProperties}.",
+    "additionalProperties": "Additional properties are not allowed.",
+    "dependencies": "Missing dependent property: {property}.",
+    "propertyNames": "Some property names do not meet the required criteria."
+  }
+}

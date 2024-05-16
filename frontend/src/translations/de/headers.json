@@ -1,0 +1,21 @@
+{
+  "data_header": "Hier haben Sie einen Überblick über Ihre Trainingsdaten",
+  "ml_header": "Hier haben Sie einen Überblick über Ihre Machine-Learning-Projekte",
+  "ml_models": "Verfügbare Modelle",
+  "tsa_header": "Hier haben Sie einen Überblick über Ihre Zeitreihenanalyse-Projekte",
+  "tsa_models": "Verfügbare Modelle",
+  "project_header": "Hier haben Sie einen Überblick über Ihre Projekte",
+  "project_models": "Verfügbare Projekte",
+  "model_usages": "Dieses Modell wird in folgenden Projekten verwendet:",
+  "select_model": "Wählen Sie ein Modell",
+  "select_configuration": "Wählen Sie eine trainierte Konfiguration",
+  "copy_dialog": "Warnung",
+  "custom_value_dialog": "Erstellen Sie einen neuen benutzerdefinierten Wert",
+  "delete_dialog": "Warnung",
+  "data_types": "Datentypen",
+  "update_solution": "Aktualisieren Sie Ihre Lösung",
+  "add_new_solution": "Fügen Sie eine neue Lösung hinzu",
+
+  "select_files": "Dateien",
+  "select_items": "Elemente"
+}

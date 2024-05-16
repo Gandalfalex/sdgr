@@ -1,0 +1,9 @@
+graph TD
+    TS(Real Time Series Data) -->|Input| D{Discriminator}
+    TS -->|Training Data| G[Generator]
+    noise(Noise / Random Input) -->|Generates synthetic data| G
+    G -->|Synthetic Time Series Data| D
+    D -->|Discriminates| real[Recognized as Real]
+    D -->|Discriminates| fake[Recognized as Fake]
+    fake -->|Feedback to Improve| G
+    real -->|Reinforce Authenticity| TS

@@ -1,0 +1,16 @@
+flowchart TD
+    A[Start: Check JSON Data] -->|List| B[Is it 1-Dimensional?]
+    B -- Yes --> C[Assume Time Series Data Without Timestamps]
+    C --> U[Create Dictionary]
+    B -- No --> E[Multi-Dimensional Data]
+    F --> P[Create Dictionary]
+    E --> H[No Regular Intervals]
+    E --> F[Identify List with Regular Intervals<br />and use as  Timestamp]
+    H --> I[Treat each list separately,<br />Generate Default Timestamp]
+    I --> U[Create Dictionary <br /> Headers as key, <br />Time Series and default Timestamps as value]
+    A -->|Dictionary| K[Find Timestamp for Each Taxonomy]
+    K --> L[Map Other Keys to Timestamp]
+    L --> P
+    K --> N[No Timestamp Found]
+    N --> O[Treat Each Key as Separate List,<br />Generate Default Timestamp]
+    O --> P[Create Dictionary <br /> Headers as key, <br />Time Series and Stamp as value]

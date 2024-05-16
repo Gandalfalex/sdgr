@@ -1,0 +1,1193 @@
+openapi: "3.0.3"
+info:
+  title: "spring_backend API"
+  description: "spring_backend API"
+  version: "1.0.0"
+servers:
+  - url: "https://spring_backend"
+paths:
+  /api/projects/{id}:
+    put:
+      summary: "PUT api/projects/{id}"
+      operationId: "updateProject"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectDTO"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ProjectDTO"
+    delete:
+      summary: "DELETE api/projects/{id}"
+      operationId: "deleteProject"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ProjectDTO"
+    get:
+      summary: "GET api/projects/{id}"
+      operationId: "getProjectById"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ProjectDTO"
+  /api/projects:
+    post:
+      summary: "POST api/projects"
+      operationId: "createNewProject"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectDTO"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ProjectDTO"
+    get:
+      summary: "GET api/projects"
+      operationId: "getAllProjects"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/ProjectDTO"
+  /api/projects/upload:
+    post:
+      summary: "POST api/projects/upload"
+      operationId: "uploadProject"
+      parameters:
+        - name: "file"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+            format: "binary"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ProjectDTO"
+  /api/projects/{id}/download:
+    get:
+      summary: "GET api/projects/{id}/download"
+      operationId: "downloadProject"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Resource"
+  /api/django/ml:
+    get:
+      summary: "GET api/django/ml"
+      operationId: "getMLModels"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/MLModelsDTO"
+  /api/django/ml/configured:
+    get:
+      summary: "GET api/django/ml/configured"
+      operationId: "getMLModelsWithConfig"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/MLModelsDTO"
+  /api/django/tsd:
+    get:
+      summary: "GET api/django/tsd"
+      operationId: "getTSDModels"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/TSDModelDTO"
+  /api/django/tsd/configured:
+    get:
+      summary: "GET api/django/tsd/configured"
+      operationId: "getTSDModelsConfigured"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/TSDModelDTO"
+  /api/django/ml/{modelId}:
+    get:
+      summary: "GET api/django/ml/{modelId}"
+      operationId: "getValidSolutions"
+      parameters:
+        - name: "modelId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/MLConfigurationDTO"
+  /api/django/tsd/{modelId}:
+    get:
+      summary: "GET api/django/tsd/{modelId}"
+      operationId: "getValidTSDConfiguration"
+      parameters:
+        - name: "modelId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/TSDConfigurationDTO"
+  /api/django/tsd/{modelId}/tsd_config/{configId}/trainData:
+    get:
+      summary: "GET api/django/tsd/{modelId}/tsd_config/{configId}/trainData"
+      operationId: "getTrainDataOfConfiguration"
+      parameters:
+        - name: "modelId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "configId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/TrainDataDTO"
+  /api/logs/{trackId}:
+    get:
+      summary: "GET api/logs/{trackId}"
+      operationId: "getLogsForTrack"
+      parameters:
+        - name: "trackId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "page_size"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+        - name: "page_number"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+        - name: "search_query"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/LogMessageDTO"
+  /api/logs/{trackId}/log_size:
+    get:
+      summary: "GET api/logs/{trackId}/log_size"
+      operationId: "getLogSize"
+      parameters:
+        - name: "trackId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "search_query"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "integer"
+                format: "int32"
+  /api/logs/{trackId}/logSessions:
+    get:
+      summary: "GET api/logs/{trackId}/logSessions"
+      operationId: "getLogSessions"
+      parameters:
+        - name: "trackId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/LogSessionDTO"
+  /api/logs/{trackId}/logSession:
+    get:
+      summary: "GET api/logs/{trackId}/logSession"
+      operationId: "getAllByLogSession"
+      parameters:
+        - name: "trackId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "session"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/LogMessageDTO"
+  /api/logs/{trackId}/logGraph:
+    get:
+      summary: "GET api/logs/{trackId}/logGraph"
+      operationId: "getLogGraph"
+      parameters:
+        - name: "trackId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "session"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/JsonNode"
+  /api/strategies/trend:
+    get:
+      summary: "GET api/strategies/trend"
+      operationId: "getAllTrendStrategies"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/JsonNode"
+  /api/strategies/trend/{type}:
+    get:
+      summary: "GET api/strategies/trend/{type}"
+      operationId: "getTrend"
+      parameters:
+        - name: "type"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/JsonNode"
+  /api/strategies/season:
+    get:
+      summary: "GET api/strategies/season"
+      operationId: "getAllSeasonStrategies"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/JsonNode"
+  /api/strategies/season/{type}:
+    get:
+      summary: "GET api/strategies/season/{type}"
+      operationId: "getSeason"
+      parameters:
+        - name: "type"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/JsonNode"
+  /api/strategies/residual:
+    get:
+      summary: "GET api/strategies/residual"
+      operationId: "getAllResidualStrategies"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/JsonNode"
+  /api/strategies/residual/{type}:
+    get:
+      summary: "GET api/strategies/residual/{type}"
+      operationId: "getResidual"
+      parameters:
+        - name: "type"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/JsonNode"
+  /api/data_types/dataTypes:
+    post:
+      summary: "POST api/data_types/dataTypes"
+      operationId: "saveDataType"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DataTypeDTO"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/DataTypeDTO"
+    get:
+      summary: "GET api/data_types/dataTypes"
+      operationId: "getDataTypes"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/DataTypeDTO"
+  /api/data_types/dataTypes/{name}:
+    get:
+      summary: "GET api/data_types/dataTypes/{name}"
+      operationId: "getDataTypeByName"
+      parameters:
+        - name: "name"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+        - name: "configurationId"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/DataTypeDTO"
+  /api/projects/{projectId}/tracks/{trackId}/datasets/{datasetId}:
+    put:
+      summary: "PUT api/projects/{projectId}/tracks/{trackId}/datasets/{datasetId}"
+      operationId: "updateDataSet"
+      parameters:
+        - name: "projectId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "trackId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "datasetId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlainDataDTO"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PlainDataDTO"
+    delete:
+      summary: "DELETE api/projects/{projectId}/tracks/{trackId}/datasets/{datasetId}"
+      operationId: "deleteDataSet"
+      parameters:
+        - name: "projectId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "trackId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "datasetId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PlainDataDTO"
+    get:
+      summary: "GET api/projects/{projectId}/tracks/{trackId}/datasets/{datasetId}"
+      operationId: "getDatasetById"
+      parameters:
+        - name: "projectId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "trackId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "datasetId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PlainDataDTO"
+  /api/projects/{projectId}/tracks/{trackId}/datasets:
+    post:
+      summary: "POST api/projects/{projectId}/tracks/{trackId}/datasets"
+      operationId: "createNewDataSet"
+      parameters:
+        - name: "projectId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "trackId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlainDataDTO"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PlainDataDTO"
+    get:
+      summary: "Get all foos"
+      description: ""
+      operationId: ""
+      parameters:
+        - name: "projectId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "trackId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/PlainDataDTO"
+  /api/projects/{projectId}/tracks/{trackId}/datasets/{datasetId}/preview:
+    get:
+      summary: "GET api/projects/{projectId}/tracks/{trackId}/datasets/{datasetId}/preview"
+      operationId: "getPreview"
+      parameters:
+        - name: "projectId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "trackId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "datasetId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/JsonNode"
+  /api/projects/ml/datasets/{id}:
+    get:
+      summary: "GET api/projects/ml/datasets/{id}"
+      operationId: "getAllMLDataSets"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/PlainDataOccurrenceDTO"
+  /api/projects/tsd/datasets/{id}:
+    get:
+      summary: "GET api/projects/tsd/datasets/{id}"
+      operationId: "getAllTSDDataSets"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/PlainDataOccurrenceDTO"
+  /api/projects/{projectId}/tracks/{trackId}:
+    put:
+      summary: "PUT api/projects/{projectId}/tracks/{trackId}"
+      operationId: "updateTrack"
+      parameters:
+        - name: "projectId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "trackId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TrackDTO"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TrackDTO"
+    delete:
+      summary: "DELETE api/projects/{projectId}/tracks/{trackId}"
+      operationId: "deleteProject"
+      parameters:
+        - name: "projectId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "trackId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TrackDTO"
+    get:
+      summary: "GET api/projects/{projectId}/tracks/{trackId}"
+      operationId: "getTrackById"
+      parameters:
+        - name: "projectId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "trackId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TrackDTO"
+  /api/projects/{projectId}/tracks:
+    post:
+      summary: "POST api/projects/{projectId}/tracks"
+      operationId: "createNewTrack"
+      parameters:
+        - name: "projectId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TrackDTO"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TrackDTO"
+    get:
+      summary: "GET api/projects/{projectId}/tracks"
+      operationId: "getTracks"
+      parameters:
+        - name: "projectId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/TrackDTO"
+  /api/v1/auth/signup:
+    post:
+      summary: "POST api/v1/auth/signup"
+      operationId: "signup"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignUpRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/JwtAuthenticationResponse"
+  /api/v1/auth/login:
+    post:
+      summary: "POST api/v1/auth/login"
+      operationId: "login"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SigninRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/JwtAuthenticationResponse"
+  /api/v1/auth/refresh:
+    post:
+      summary: "POST api/v1/auth/refresh"
+      operationId: "refresh"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshTokenRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/RefreshTokenResponse"
+  /api/kafka/{projectId}:
+    get:
+      summary: "GET api/kafka/{projectId}"
+      operationId: "getKafkaTemplate"
+      parameters:
+        - name: "projectId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/KafkaTemplateDTO"
+  /api/user:
+    get:
+      summary: "GET api/user"
+      operationId: "getUserDRTO"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserDTO"
+components:
+  schemas:
+    ProjectDTO:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"
+        sending:
+          type: "boolean"
+    Resource:
+      type: "object"
+      properties: { }
+    Instant:
+      type: "object"
+      properties: { }
+    MLModelsDTO:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"
+        description:
+          type: "string"
+        created_at:
+          $ref: "#/components/schemas/Instant"
+    TSDModelDTO:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"
+        description:
+          type: "string"
+        created_at:
+          $ref: "#/components/schemas/Instant"
+    MLConfigurationDTO:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"
+        mlmodel:
+          $ref: "#/components/schemas/MLModelsDTO"
+        created_at:
+          $ref: "#/components/schemas/Instant"
+        training_time:
+          type: "integer"
+          format: "int32"
+        training_iterations:
+          type: "integer"
+          format: "int32"
+        accuracy:
+          type: "number"
+          format: "float"
+        max_length:
+          type: "integer"
+          format: "int32"
+    TSDConfigurationDTO:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"
+        mlmodel_id:
+          $ref: "#/components/schemas/TSDModelDTO"
+        created_at:
+          $ref: "#/components/schemas/Instant"
+        max_length:
+          type: "integer"
+          format: "int32"
+        levelConfig:
+          type: "string"
+    TrainDataDTO:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"
+    LogMessageDTO:
+      type: "object"
+      properties:
+        message:
+          type: "string"
+        time:
+          type: "string"
+        sendSession:
+          type: "string"
+        dataSetName:
+          type: "string"
+    LogSessionDTO:
+      type: "object"
+      properties:
+        session:
+          type: "string"
+    JsonNode:
+      type: "object"
+      properties: { }
+    DataTypeDTO:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        description:
+          type: "string"
+        data_type:
+          type: "string"
+          enum:
+            - "CHAR"
+            - "FLOAT"
+            - "ML"
+            - "TSA"
+            - "INTEGER"
+            - "SLEEP"
+        schema:
+          type: "string"
+        ui_schema:
+          type: "string"
+    PlainDataDTO:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"
+        numSamples:
+          type: "integer"
+          format: "int32"
+        position:
+          type: "integer"
+          format: "int32"
+        frequency:
+          type: "number"
+          format: "float"
+        dataType:
+          type: "string"
+          enum:
+            - "CHAR"
+            - "FLOAT"
+            - "ML"
+            - "TSA"
+            - "INTEGER"
+            - "SLEEP"
+        customValues:
+          $ref: "#/components/schemas/JsonNode"
+    PlainDataOccurrenceDTO:
+      type: "object"
+      properties:
+        projectId:
+          type: "integer"
+          format: "int64"
+        trackId:
+          type: "integer"
+          format: "int64"
+        dataSetId:
+          type: "integer"
+          format: "int64"
+        projectName:
+          type: "string"
+        trackName:
+          type: "string"
+        dataSetName:
+          type: "string"
+    TrackDTO:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        repeating:
+          type: "boolean"
+        name:
+          type: "string"
+        unit:
+          type: "string"
+        allowedDataTypes:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/DataTypeDTO"
+    SignUpRequest:
+      type: "object"
+      properties:
+        firstName:
+          type: "string"
+        lastName:
+          type: "string"
+        email:
+          type: "string"
+        password:
+          type: "string"
+        languageCode:
+          type: "string"
+    JwtAuthenticationResponse:
+      type: "object"
+      properties:
+        token:
+          type: "string"
+        refreshToken:
+          type: "string"
+        refreshTokenTTL:
+          type: "string"
+        languageCode:
+          type: "string"
+    SigninRequest:
+      type: "object"
+      properties:
+        email:
+          type: "string"
+        password:
+          type: "string"
+    RefreshTokenRequest:
+      type: "object"
+      properties:
+        token:
+          type: "string"
+    RefreshTokenResponse:
+      type: "object"
+      properties:
+        token:
+          type: "string"
+        refreshToken:
+          type: "string"
+    KafkaTemplateDTO:
+      type: "object"
+      properties:
+        bootstrapServerAddress:
+          type: "string"
+        topicId:
+          type: "integer"
+          format: "int64"
+        topic:
+          type: "string"
+        groupId:
+          type: "string"
+    UserDTO:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        mail:
+          type: "string"

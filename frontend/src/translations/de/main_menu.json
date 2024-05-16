@@ -1,0 +1,18 @@
+{
+  "i18n_home": "Hauptseite",
+  "i18n_home_tooltip": "Hier können Sie Ihre Daten erstellen und senden",
+  "i18n_project": "Projekt",
+  "i18n_project_tooltip": "Hier können Sie Ihre Daten erstellen und senden",
+  "i18n_train_data": "Trainingsdaten",
+  "i18n_machine_learning": "Maschinelles Lernen",
+  "i18n_machine_learning_tooltip": "Hier können Sie Ihre Modelle trainieren",
+  "i18n_time_series_analysis": "Zeitreihenanalyse",
+  "i18n_time_series_analysis_tooltip": "Hier können Sie die Zerlegung und Analyse von Zeitreihen verwenden",
+  "i18n_training_data_options": "Optionen für Trainingsdaten",
+  "i18n_data": "Daten",
+  "i18n_data_tooltip": "Hier finden Sie eine Übersicht über alle hochgeladenen Dateien",
+  "i18n_survey": "Umfrage",
+  "i18n_survey_tooltip": "Nahs",
+  "i18n_documentation": "Dokumentation",
+  "i18n_documentation_tooltip": "Dokumentation optionen"
+}

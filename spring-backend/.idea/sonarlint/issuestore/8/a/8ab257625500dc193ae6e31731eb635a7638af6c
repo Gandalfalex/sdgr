@@ -1,0 +1,24 @@
+
+|
+java:S1192i"ZDefine a constant instead of duplicating this literal "entity could not be found" 4 times.(Üíçşÿÿÿÿ8¦Ó¾ÖÎ1
+t
+java:S11923"XDefine a constant instead of duplicating this literal "user could not be found" 3 times.(µ‚Ø%8©Ó¾ÖÎ1
+o	java:S116#"SRename this field "BASE_URL" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(…À÷–8ÀÓ¾ÖÎ1
+[
+java:S1854:"9Remove this useless assignment to local variable "token".(´ÍÂ÷ùÿÿÿÿ8ÊÓ¾ÖÎ1
+K
+java:S11728".Remove this unused method parameter "dataSet".(®Š–¼8ÊÓ¾ÖÎ1
+L
+java:S1481:"*Remove this unused "token" local variable.(´ÍÂ÷ùÿÿÿÿ8ÌÓ¾ÖÎ1
+H
+java:S1168;"+Return an empty collection instead of null.(¥¹ï8ÌÓ¾ÖÎ1
+X
+java:S1854›":Remove this useless assignment to local variable "config".(¼¡£î8ÜÓ¾ÖÎ1
+R
+java:S2201š"/The return value of "orElseThrow" must be used.(Êñ°¥ûÿÿÿÿ8ÜÓ¾ÖÎ1
+I
+java:S1481›"+Remove this unused "config" local variable.(¼¡£î8İÓ¾ÖÎ1
+I
+java:S1168œ"+Return an empty collection instead of null.(¥¹ï8İÓ¾ÖÎ1
+R
+java:S2201¡"/The return value of "orElseThrow" must be used.(Êñ°¥ûÿÿÿÿ8ßÓ¾ÖÎ1

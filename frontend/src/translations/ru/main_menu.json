@@ -1,0 +1,18 @@
+{
+  "i18n_home": "Домой",
+  "i18n_home_tooltip": "Здесь вы можете создать и отправить ваши данные",
+  "i18n_project": "Проект",
+  "i18n_project_tooltip": "Здесь вы можете создать и отправить ваши данные",
+  "i18n_train_data": "Обучающие данные",
+  "i18n_machine_learning": "Машинное обучение",
+  "i18n_machine_learning_tooltip": "Здесь вы можете обучить свои модели",
+  "i18n_time_series_analysis": "Анализ временных рядов",
+  "i18n_time_series_analysis_tooltip": "Здесь вы можете использовать декомпозицию временных рядов и аналитику",
+  "i18n_training_data_options": "Опции обучающих данных",
+  "i18n_data": "Данные",
+  "i18n_data_tooltip": "Здесь вы можете найти обзор всех ваших загруженных файлов",
+  "i18n_survey": "Опрос",
+  "i18n_survey_tooltip": "Nahs",
+  "i18n_documentation": "Документация",
+  "i18n_documentation_tooltip": "Опции документации"
+}

@@ -1,0 +1,345 @@
+% !TeX program = xelatex
+
+\chapter{Aufbau der Testumgebung}
+\label{sec:testing}
+
+\section{Metriken und Methoden der Testumgebung}
+\label{sec:test_framework}
+
+In den Abschnitten \ref{sec:djangoML} und \ref{sec:djangoTSA} wurde bereits auf die grundlegende Implementierung der Modelle oder Algorithmen beider Varianten in Grundzügen eingegangen. 
+In diesem Abschnitt wird nun die Implementierung des Testframeworks beschrieben, das die beiden Varianten vergleicht.
+
+Dies ist nicht trivial, da die Kriterien für synthetische Daten im Vergleich zu ihrem realen Pendant auf Ähnlichkeit, jedoch bewusst nicht auf Identität beruhen. 
+Eine einfache euklidische Distanzberechnung ist daher nicht sinnvoll. Stattdessen wird auf verschiedene Methoden zurückgegriffen, die im Folgenden beschrieben werden.
+
+
+\subsection{Nicht-Statistische Maße}
+\label{sec:non_statistical_measures}
+
+\paragraph{Wasserstein-Distanz}
+Die Wasserstein-Distanz, auch als Earth Mover's Distance\cite{Understa51:online} bekannt, ist hilfreich, um Unterschiede zwischen zwei Wahrscheinlichkeitsverteilungen zu quantifizieren. 
+Im Gegensatz zur euklidischen Distanz, bei der die direkten Differenzen zwischen einzelnen Datenpunkten berechnet werden, berücksichtigt die Wasserstein-Distanz die gesamte Struktur der Verteilungen. 
+Somit ist sie als Metrik in Szenarien, in denen nicht nur identische, sondern ähnliche Daten verglichen werden, durchaus aussagekräftig.
+
+\begin{equation}[Wasserstein-Distanz]
+    \label{eq:wasserstein_distance}
+    W_p(\mu, \nu) = \left( \inf_{\gamma \in \Gamma(\mu, \nu)} \int_{M \times M} d(x, y)^p \, d\gamma(x, y) \right)^{\frac{1}{p}}
+\end{equation}
+
+Für die in Gleichung \ref{eq:wasserstein_distance} verwendeten Variablen gilt:
+
+\(W_p(\mu, \nu)\) ist die Distanz zwischen den beiden Verteilungen \(\mu\) und \(\nu\), \(\Gamma(\mu, \nu)\) die Menge aller Kopplungen zwischen \(\mu\) und \(\nu\) und \(d(x, y)\) ist die euklidische Distanz zwischen x und y.
+
+Speziell in der Zeitreihenanalyse ist dies besonders relevant, da synthetische Zeitreihen im Vergleich zum Original Verschiebungen aufweisen können. 
+Die Wasserstein-Distanz kann solche Verschiebungen handhaben, da sie die gesamte Verteilung der Datenpunkte berücksichtigt, anstatt eines Punkt-zu-Punkt-Vergleichs wie bei der euklidischen Distanz.
+
+Sofern die Trainingsdaten jedoch eine zu heterogene Verteilung aufweisen, ist die Wasserstein-Distanz wenig geeignet, 
+da ihre Aussagekraft zu unterschiedlich sein kann. Dies ist bei variablen Daten grundsätzlich der Fall, da die Daten nicht nur unterschiedliche Werte, 
+sondern auch unterschiedliche Verteilungen aufweisen können. Als Metrik für vorher bekannte Daten ist die Wasserstein-Distanz jedoch durchaus geeignet.
+
+\paragraph{Autokorrelation}
+Eine weitere Methode ist die Analyse der Autokorrelation\cite{statistikguru} innerhalb von Zeitreihen. 
+Die \acf{ACF} misst, wie stark eine Zeitreihe mit verzögerten Versionen von sich selbst korreliert ist. 
+Dies ist besonders nützlich, um die interne Struktur von Zeitreihendaten zu verstehen, insbesondere im Hinblick auf ihre Periodizität und saisonale Muster.
+
+\begin{equation}
+    \label{eq:autocorrelation}
+    ACF(k) = \frac{\sum_{t=1}^{n-k} (X_t - \overline{X})(X_{t+k} - \overline{X})}{\sum_{t=1}^{n} (X_t - \overline{X})^2}
+\end{equation}
+
+In Gleichung \ref{eq:autocorrelation} repräsentiert \( ACF(k) \) die Autokorrelation zum Lag \( k \), \( X_t \) ist der Wert der Zeitreihe zum Zeitpunkt \( t \), und \( \overline{X} \) ist der Mittelwert der Zeitreihe. 
+Diese Funktion hilft dabei, Periodizitäten und wiederkehrende Muster in den Daten zu identifizieren, die für die Prognose und Analyse zukünftiger Datenpunkte nützlich sein können.
+
+\paragraph{Fourier-Transformation}
+Ein weiteres wichtiges Maß ist die Spektralanalyse, die Frequenzkomponenten einer Zeitreihe identifiziert. 
+Hierfür kann der \acf{FFT} Algorihtmus genutzt werden, um Zeitreihen von einer Zeit- in eine Frequenzdomäne zu überführen, um so dominierender Frequenzen und periodischer Signale in den Daten zu identifizieren \cite{szeliski2011computer}.
+
+\begin{equation}
+    \label{eq:fourier_transform}
+    F(\omega) = \int_{-\infty}^{\infty} f(t) e^{-2\pi i \omega t} \, dt
+\end{equation}
+
+In Gleichung \ref{eq:fourier_transform} ist \( F(\omega) \) die Fourier-Transformierte der Zeitreihe \( f(t) \), wobei \( \omega \) die Frequenz und \( t \) die Zeit darstellt. 
+Diese Analyse ist besonders wertvoll, um zyklische Verhaltensweisen in Zeitreihendaten zu erkennen, die durch einfache Abstandsmetriken nicht erfasst werden können.
+
+
+\subsection{Statistische Maße}
+\label{sec:statistical_measures}
+Zeitreihen, wie alle Datensätze, folgen spezifischen Verteilungen. Wenn man annimmt, dass die originalen Daten einer bestimmten Verteilung folgen, 
+sollten die synthetischen Daten diese Verteilung widerspiegeln. Daher kann der Einsatz statistischer Methoden zur Bewertung der Ähnlichkeit zwischen synthetischen und realen Daten als aussagekräftig angenommen werden. 
+Dies gilt insbesondere, wenn man davon ausgeht, dass die synthetischen Daten zwar nicht identisch, aber statistisch ähnlich zu den realen Daten sein sollen. 
+
+\paragraph{Kullback-Leibler Divergenz}
+Ein wichtiges statistisches Maß in diesem Kontext ist die \acf{KLD} (siehe \cite{Kullback98:online}). Die \ac{KLD} quantifiziert den Informationsverlust, der auftritt, wenn eine Verteilung genutzt wird, um eine andere Verteilung anzunähern. 
+Ein hoher Wert der KLD signalisiert erhebliche Unterschiede zwischen den Verteilungen, was darauf hinweist, dass die synthetischen Daten die realen nicht adäquat abbilden und wichtige Informationen verloren gehen. 
+Im Gegensatz dazu indiziert ein niedriger KLD-Wert eine starke Ähnlichkeit der Verteilungen, was nahelegt, dass die synthetischen Daten eine präzise Repräsentation der realen Daten sind und der Informationsverlust minimiert ist
+Mathematisch ist es definiert als:
+
+\begin{equation}
+    \label{eq:kl_divergence}
+    D_{KL}(P || Q) = \sum_{i} P(i) \log \left( \frac{P(i)}{Q(i)} \right)
+\end{equation}
+
+Wobei \(D_{KL}(P || Q)\) die Kullback-Leibler Divergenz zwischen den Verteilungen P und Q ist. 
+\(P(i)\) und \(Q(i)\) sind die Wahrscheinlichkeiten für das Ereignis \(i\) in den Verteilungen P und Q.
+
+
+\paragraph{Maximum Mittelwert Diskrepanz}
+\textit{\acf{MMD}} ist eine nicht-parametrische Methode, die Unterschiede zwischen zwei Verteilungen auf Basis von Stichproben aus jenen Verteilungen evaluiert.
+Definiert ist sie über:
+
+\begin{equation}
+    \text{MMD}^2(P, Q) = \mathbb{E}_{x,x' \sim P}[k(x, x')] + \mathbb{E}_{y,y' \sim Q}[k(y, y')] - 2\mathbb{E}_{x \sim P, y \sim Q}[k(x, y)]
+\end{equation}
+Wobei, wie in Formel \ref{eq:kl_divergence} bereits definiert, \(P\) und \(Q\) die beiden Verteilungen sind, \(x,x'\) und \(y,y'\) sind die jeweiligen Stichproben und \(\mathbb{E}\) der Erwartungswert.
+
+Sie verwendet eine Kernel-Funktion \(k\), um die Distanz zwischen den Mittelwerten beider Verteilungen im Feature-Raum zu messen. 
+Da sie keinerlei Annahmen über die Form der Verteilungen macht, ist \ac{MMD} ein flexibles Werkzeug zur Analyse, insbesondere wenn die Form der Verteilungen unbekannt oder komplex ist, wovon bei variablen Datensätzen grundsätzlich auszugehen ist.
+Es eignet sich daher sehr gut, um festzustellen, ob zwei Stichproben aus der gleichen Verteilung stammen, was in vielen Anwendungen der Zeitreihenanalyse von Bedeutung ist.
+
+
+\paragraph{Mann-Whitney-U-Test}
+Der Mann-Whitney-U-Test, auch bekannt als Wilcoxon-Rangsummentest, ist ein nicht-parametrischer Test, der verwendet wird, um zu beurteilen, ob zwei unabhängige Stichproben aus identischen Populationen stammen. Der Test ist besonders geeignet für Daten mit unbekannter oder nicht-normaler Verteilung. Er vergleicht die Rangwerte der Daten in den beiden Gruppen.
+
+Sei \( U \) die Teststatistik, die wie folgt berechnet wird:
+\begin{equation}
+    U = R_1 - \frac{n_1(n_1+1)}{2}
+\end{equation}
+wobei \( R_1 \) die Summe der Ränge in der ersten Gruppe, \( n_1 \) die Anzahl der Beobachtungen in der ersten Gruppe ist. Der Wert von \( U \) wird dann verwendet, um die Signifikanz des Unterschieds zwischen den beiden Gruppen zu beurteilen.
+
+\paragraph{T-Test}
+Der T-Test ist ein statistischer Hypothesentest, der verwendet wird, um zu prüfen, ob sich die Mittelwerte zweier Gruppen signifikant unterscheiden. Er setzt voraus, dass die Daten normalverteilt sind. Der unabhängige T-Test für zwei Gruppen ist definiert als:
+
+\begin{equation}
+    t = \frac{\bar{X}_1 - \bar{X}_2}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}
+\end{equation}
+wobei \( \bar{X}_1 \) und \( \bar{X}_2 \) die Mittelwerte der beiden Gruppen, \( s_1^2 \) und \( s_2^2 \) die Varianzen der Gruppen und \( n_1 \) und \( n_2 \) die Anzahl der Beobachtungen in den Gruppen sind. Der berechnete t-Wert wird dann mit einem kritischen Wert aus der T-Verteilung verglichen, um die Hypothese zu testen.
+
+
+
+
+\subsection{Evaluation durch machinenelles Lernen}
+\label{sec:ml_methods_evaluation}
+Machine Learning-Algorithmen sind besonders effizient darin, Muster in Daten zu erkennen. Insbesondere die Diskriminatoren in generativen Modellen sind 
+darauf ausgelegt zu beurteilen, ob die vom Generator erzeugten Daten realistisch sind oder nicht. 
+Daher bietet sich die Genauigkeit des Diskriminators als Maß für die Ähnlichkeit zwischen synthetischen und realen Daten an. Wenn der Diskriminator die 
+synthetischen Daten als real einstuft, deutet dies auf eine hohe Ähnlichkeit oder grundsätzlich gleiche Muster mit den tatsächlichen Daten hin.
+
+Eine in der Wissenschaft verbreitete und oft genutzte Methode baut auf dem Konzept auf und erweitert dieses um dieses Konzept im Kontext der Privatsphäre und ethischer 
+Aspekten synthetischer Daten, insbesondere personenbezogener Daten, anzuwenden. 
+Ein Ansatz zur Bewertung des Datenschutzes ist die Überprüfung der Outputs eines trainierten Modells auf Ähnlichkeiten, die Rückschlüsse auf die ursprünglich verwendeten Trainingsdaten zulassen könnten. 
+In dem Paper 'User-Level Membership Inference Attack against Metric Embedding Learning' von Guoyao Li, Shahbaz Rezaei und Xin Liu \cite{li2022userlevel} wird eine solche Methodik vorgestellt. 
+Wenn ein Angreifermodell auf der Basis von synthetischen Daten trainiert wird und eine hohe Wahrscheinlichkeit besteht, dass dieses Modell die realen Trainingsdaten identifiziert, ist die Privatsphäre der Daten möglicherweise gefährdet. 
+Dieses Konzept wurde beispielsweise von Nikitin et al. in \cite{nikitin2023tsgm} untersucht.
+
+Ein weiterer wichtiger Aspekt ist die Erkennung von Ausreißern in den Daten. Wenn die realen Daten signifikante Anteile von Ausreißern aufweisen, sollten diese auch in den synthetischen Daten vorhanden sein. 
+Zur Bewertung dieser Eigenschaft kann ein Random-Forest-Algorithmus eingesetzt werden, der auf den realen Daten trainiert wird und sowohl auf die realen als auch auf die synthetischen Daten angewendet wird. 
+Eine ähnliche Verteilung von Ausreißern in beiden Datensätzen kann darauf hindeuten, dass die synthetischen Daten die extrema der realen Daten gut nachbilden.
+
+
+
+\section{Bewertung der Methoden}
+\label{sec:method_evaluation}
+All diese Methoden wurden in einem Testframework implementiert,
+Dieses Framework besitzt die reduzierten und leicht modifizierten Algorithmen, die auch in der \ac{API} verwendet werden. Es trainiert die Modelle sowie speichert deren Laufzeit und die von ihm generierten synthetischen Daten.
+
+\begin{lstlisting}[language=Python, caption={Methode um Statistiken aus den generierten Daten zu erstellen}, label={code:testFramework_statistics}]
+def run_test_for_synthetic_data(data, syn_date_file_name, filename="statistic"):
+    syn_data = load_processed_data(syn_date_file_name)
+    result = {}
+    for i in syn_data.keys():
+        result[i] = {}
+        if len(syn_data[i]) == 99:
+            x, y = build_summed_version(data), np.array(syn_data[i][0])
+        else:
+            x, y = build_summed_version(data), np.array(syn_data[i][0])
+        result[i]["statistic"] = run_static_tests(x, y)
+        result[i]["outlier"] = outlier_detection(data, y)
+        result[i]["attacker"] = run_syn_analyzer_(data, syn_data[i])
+        result[i]["kl"] = run_kullback_leibler_divergence(x, y)
+    write_to_file(f"data/{filename}.json", result)
+\end{lstlisting}
+
+
+Abgespeichert werden die Daten in einer JSON Datei, welche dann von den verschiedenen Methoden gelesen werden kann.
+Eine Methode nimmt dann die gesammelten Daten und wertet diese in verschiedenen Schritten aus und erstellt die notwendigen Statistiken (Siehe Listing \ref{code:testFramework_statistics}).
+Da sie am Ende des Prozesses wieder gespeichert werden, können sie zu einem späteren Zeitpunkt analysiert und geplottet werden.
+
+
+Im letzten Schritt werden die Daten dann an einen Clustering Algorithmus übergeben, welcher die Daten in verschiedene Gruppen unterteilt.
+Über Pyplot\footnote{https://matplotlib.org/stable/tutorials/pyplot.html} können die Daten visualisiert werden und sind somit leichter zu bewerten.
+Für die Clustering Methoden wurde Plotly\footnote{https://plotly.com/} verwendet, da diese eine interaktive Visualisierung ermöglichen und die generierten 
+HTML Seiten problemlos in die Hugo Dokumentation eingebunden werden können.
+
+Das Testframework ist so konzipiert, dass, abgesehen der Visualisierung, alle Schritte automatisch über die main Methode ausgeführt werden können und lediglich der Pfad zur Datei mit den Trainingsdaten ausgetauscht werden muss.
+Auch folgen die Modelle dem gleichen Vererbungsdesign, sodass sie alle über die gleiche Schnittstelle angesprochen werden können.
+
+
+\begin{lstlisting}[language=Python, caption={Training von Modellen im Testframework}, label={code:modelTraining_test}]
+modules = [
+    (RNN, "RNN"),
+    ...
+]
+
+tsa_modules = [
+    (SingularSpectrumAnalysis, "SSA"),
+    ...
+]
+
+def run_training_for_all_modules(data:[], name:str, use_ml=True):
+    data = np.array(data)
+    iterations = [30, 50, 70, 100, 140, 210, 300, 500, 700, 1400, 2100]
+    name = f"{name}_{'ml' if use_ml else 'tsa'}"
+    filename = f"data/{name}.json"
+    all_data = load_data(filename)
+
+    if use_ml:
+        for module, class_name in modules:
+            for iteration in iterations:
+                run_info = RunInformation(iterations=iteration, input_length=100)
+                value = run_class(module, class_name, data, run_info, {})
+                all_data[f"{class_name}_{iteration}"] = value
+            write_to_file(filename, all_data)
+    else:
+        for module, class_name in tsa_modules:
+            run_info = RunInformation(iterations=0, input_length=100)
+            value = run_class(module, class_name, data, run_info, {})
+            all_data[f"{class_name}"] = value
+            write_to_file(filename, all_data)
+\end{lstlisting}
+
+Ziel des Testframeworks ist es aber nicht nur die syntethischen Daten der Algorithmen und Modelle mit den originalen Daten zu vergleichen, 
+sonder auch zu schauen inwieweit die Anzahl der Iterationen, gerade bei den generativen Modellen, die Ergebnisse beeinflusst und dies in Relation 
+zum erhöhten Rechenaufwand zu setzen.
+
+
+
+\subsection{Clustering}
+Clustering ist ein Verfahren im Bereich des überwachten Lernens mit dem Ziel Daten in Gruppen zu unterteilen.
+Hierbei beinhalten diese Gruppen ähnliche Daten, während die Daten zwischen den Gruppen möglichst unterschiedlich sind.
+
+Für die Analyse von synthetische Zeitreihen ist dies interessant, da eine Liste an Eigentschaften der synthetischen und realten Daten erstellt 
+werden kann und diese dann in Gruppen unterteilt werden können.
+Sind die Gruppen sehr weit auseinander, dann sind die synthetischen Daten nicht ähnlich zu den realen Daten. Sind sie sehr nah, dann sind die 
+synthetischen Daten wiederum sehr ähnlich zu den realen Daten. Ideal wäre also eine Gruppe, welche einen geringen Abstand zum Cluster der originalen Daten besitzt.
+
+Um einen Clustering-Algorithmus zu verwenden, müssen zunächst die Eigenschaften der Daten extrahiert werden. Hierzu wurden verschiedene Methoden verwendet:
+
+
+Clustering ist ein Verfahren im Bereich des unüberwachten Lernens, das darauf abzielt, Daten in Gruppen zu unterteilen. Diese Gruppen bestehen aus ähnlichen Daten, 
+während die Daten zwischen den Gruppen möglichst unterschiedlich sind.
+
+Die Anwendung von Clustering-Verfahren auf die Analyse von synthetischen Zeitreihen ist somit besonders interessant um zu sehen wie die jeweiligen Modelle ihre Daten generieren. 
+Hierfür wird eine Liste von Eigenschaften sowohl der synthetischen als auch der realen Daten erstellt. 
+Diese Eigenschaften werden anschließend genutzt, um die Daten in Gruppen zu unterteilen. Wenn die Gruppen weit auseinanderliegen, deutet dies darauf hin, dass die synthetischen Daten nicht den realen Daten ähneln. 
+Sind die Gruppen hingegen nahe beieinander, impliziert dies eine hohe Ähnlichkeit zwischen den synthetischen und den realen Daten. Das ideale Ergebnis wäre eine Gruppe synthetischer Daten, die einen geringen Abstand zum Cluster der originalen Daten aufweist.
+
+Bevor ein Clustering-Algorithmus angewendet werden kann, ist es jedoch notwendig, die Eigenschaften der Daten zu extrahieren. Für diesen Zweck wurden verschiedene Methoden eingesetzt:
+
+
+\begin{enumerate}
+    \item \textbf{Statistische Eigenschaften}:
+    \begin{itemize}
+        \item \textit{Mittelwert und Standardabweichung}: Diese Metriken geben einen Überblick über die zentrale Tendenz und die Streuung der Zeitreihe.
+        \item \textit{Maximum und Minimum Werte}: Diese Informationen geben einen Überblick in welchem Wertebereich sich die Zeitreihe befindet.
+        \item \textit{Skewness und Kurtosis}: Skewness ist eine Metrik, die die Asymmetrie der Verteilung der Zeitreihe misst. Kurtosis misst Ausreißer der Verteilung der Zeitreihe. 
+        Ein hoher Kurtosis-Wert bedeutet viele Ausreißer, während ein niedriger Wert bedeutet, dass die Verteilung weniger Ausreißer aufweist.
+    \end{itemize}
+    
+    \item \textbf{Wavelet Transform Eigenschaften}:
+    \begin{itemize} %% TODO add chapter
+        \item Daubechies Wavelet ist eine Methode, die eine Zeitreihe in verschiedene Frequenzkomponenten zerlegt. Diese Frequenzkomponenten können dann als Eigenschaften verwendet werden \cite{szeliski2011computer}.
+    \end{itemize}
+    
+    \item \textbf{Time Series Decomposition (Saisonale Aufspaltung)}:
+    \begin{itemize}
+        \item Aufspalten einer Zeitreihe in Trend, Saison und Residuen. Dieses sind die klassischen Komponenten wie sie in Sektion \ref*{techniques:decomposition} beschrieben wurden.
+    \end{itemize}
+    
+    \item \textbf{Spectral Analysy (Welch Methode)}:
+    \begin{itemize}
+        \item Die Welch Methode ist ein Algorithmus der Spektralanalyse und wir zur Berechnung der Leistungsspektraldichte von Zeitreihen eingesetzt. 
+        Diese Leistungsspektraldichte gibt an wie eine Reihe über meherere Frequenzen verteilt ist.
+    \end{itemize}
+\end{enumerate}
+
+Hinzu kamen noch die Werte, welche in Sektionen \ref{sec:non_statistical_measures}, \ref{sec:statistical_measures} und \ref{sec:ml_methods_evaluation} gesammelt wurden.
+
+Diese gesammelten Eigenschaften können nun mit einem Clustering-Algorithmus, wie beispielsweise dem k-Means-Algorithmus, verarbeitet werden. 
+Der k-Means-Algorithmus ist besonders beliebt, da er effizient ist und sich einfach implementieren lässt. Er teilt eine Liste von Datenpunkten in \textit{k} Gruppen auf. 
+Allerdings liefert k-Means oft eine Vielzahl von Parametern zurück, die schwer zu interpretieren sein können. Aus diesem Grund ist es sinnvoll, Techniken zur Reduktion der Dimensionalität der Daten einzusetzen, 
+um die Clustering-Ergebnisse vernünftig interpretieren zu können.
+
+Ein verbreiteter Ansatz hierfür ist die \acf{PCA}, die sich besonders effektiv bei der Extraktion und Identifikation wichtiger Merkmale zeigt. 
+Die PCA kann, wie in Agostas Arbeit\cite{agosta} hervorgehoben, periodische Komponenten isolieren und Rauschen reduzieren. Dieser Prozess der Identifizierung und Isolierung wesentlicher Komponenten in den Daten ist entscheidend 
+für die Dimensionsreduktion und ermöglicht eine tiefere Analyse aufbauend auf dem Clustering-Ergebnis.
+
+
+\paragraph{\acf{PCA}}
+Die Fähigkeit der PCA, die Dimensionalität eines Datensatzes zu reduzieren und gleichzeitig dessen Varianz zu erhalten, macht sie zu einem wertvollen Werkzeug in der Analyse von Zeitreihendaten nach der Merkmalsextraktion. 
+Sie identifiziert und isoliert effektiv die Hauptkomponenten der Variation innerhalb der extrahierten Merkmale \cite{agosta}.
+
+\paragraph{\acf{t-SNE}}
+t-SNE eignet sich hervorragend zur Visualisierung und Analyse der nichtlinearen Beziehungen und Cluster in hochdimensionalen Daten, 
+insbesondere nach der Extraktion wichtiger Merkmale. Seine Anwendung in komplexen Zeitreihendatensätzen ermöglicht eine nuanciertere Erforschung der Datenstruktur \cite{8851847}.
+
+\paragraph{\acf{UMAP}}
+Die Flexibilität von UMAP im Umgang mit linearen und nichtlinearen Daten macht es für die Zeitreihenanalyse geeignet, 
+in der die extrahierten Merkmale von einfachen bis zu komplexen Mustern reichen können. Seine Fähigkeit, lokale und globale Strukturen zu erhalten, ist besonders vorteilhaft in Datensätzen mit variierenden Zeitskalen \cite{9412261}.
+
+\paragraph{\acf{Isomap}}
+In Zeitreihendaten, die auf einem nichtlinearen Manifold liegen, bietet Isomaps Fokus auf die Erhaltung geodätischer Distanzen eine einzigartige Perspektive. 
+Nach der Merkmalsextraktion kann Isomap Einblicke in die intrinsische geometrische Struktur der Daten geben, was es ideal für komplexe Datensätze macht \cite{7324314}.
+
+
+\subsection{Getestete Modelle}
+\label{sec:tested_models}
+Viele der Grundlegenden Modelle unterscheiden sich nur durch leicht abgewandelte Archtieckturen oder Loss-Funktionen.
+Dann gibt es noch Bibliotheken, welche komplexere Modell-Architeckturen bereitstellen, wie beispielsweise die tsgm Bibliothek \cite{nikitin2023tsgm}.
+Somit wurde für die Tests eine Vielzahl an Modellen verwendet, welche in den folgenden Abschnitten beschrieben werden.
+
+\subsubsection{Generative Modelle}
+\label{sec:generative_models}
+\paragraph{Native Modelle}
+Nativ bezieht sich in diesem Kontext auf Modelle, die direkt auf der Keras Bibliothek aufgebaut sind und keine weiteren Abhängigkeiten haben. Sie nutzen die Standard-Implementierung von Keras und Tensorflow, ihre Parameter sind definiert und stehen in Abhängigkeit zur Größe der Daten.
+Sie besitzen, im Vergleich zu anderen Modellen, eine geringe Komplexität mit weniger Parametern und Schichten und sind daher schneller zu trainieren.
+Gerade die Schnelligkeit der Modelle macht diese hoch interessant, da sie mit wenig Rechenaufwand synthetische Daten in kurzer Zeit generieren können und damit ideal für den Einsatz in der \ac{API} sind.
+
+Modelle dieser Art sind:    
+\begin{enumerate}
+    \item GAN
+    \item CGAN
+    \item WGAN (Wasserstein GAN) nur leider erziehlt es extrem schlechte Ergebnisse
+    \item TGAN (Time Series GAN), auch dieses erziehlte nur schlechte Ergebnisse und wurde daher nicht weiter verfolgt
+\end{enumerate}
+
+\paragraph{tsgm Modelle}
+Die tsgm Bibliothek \cite{nikitin2023tsgm} baut auf Keras auf und bietet einige Modelle an, welche speziell für die Generierung synthetischer Zeitreihen entwickelt wurden:
+\begin{enumerate}
+    \item TGAN
+    \item TCGAN
+    \item CGAN
+    \item RCGAN
+\end{enumerate}
+Leider konnten von diesen aber nur die ersten drei genutzt werden, da RCGAN Abhängigkeiten zur Tensorflow-Privacy besitzt und diese nicht mit der genutzten Python Version (3.11) kompatibel war.
+
+\subsubsection{Rekursive Modelle}
+Um die Rekursiven Modelle zu testen wurde wieder auf die Keras Bibliothek zurückgegriffen und mit Ihrer Hilfe die folgenden Modelle implementiert:
+\begin{enumerate}
+    \item RNN
+    \item LSTM
+    \item CNN-LSTM
+    \item CONV-LSTM
+\end{enumerate}
+
+\subsection{Zeitreihenanalyse Algorithem und Modelle}
+\label{sec:tsa_models}
+Für die Zeitreihenanalyse wurde, wie Bereits im Detail in Sektionen \label{techniques:EMD} und \ref{techniques:SSA} erklärt, die \ac{EMD} und \ac{SSA} Algorithmen verwendet.
+Weitere gängige Methoden sind \ac{AMIRA} und der Cubic Spline Algorihtmus, deren Bibliotheken aber lediglich in die grundlegende Code Struktur eingebunden werden mussten. Somit wuden folgende Algorithmen verwendet:
+
+\begin{enumerate}
+    \item EMD
+    \item SSA
+    \item Amira
+    \item Cubic Spline
+\end{enumerate}
