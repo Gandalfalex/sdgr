@@ -81,7 +81,7 @@ services:
 
   db:
     image: postgres:14
-    container_name: sus-db-dev
+    container_name: sus-db-prod
     environment:
       - POSTGRES_USER=sample
       - POSTGRES_PASSWORD=sample
@@ -96,7 +96,7 @@ services:
   django:
     build: 
       context: ../../data-training-app/djangoProject
-    container_name: django-dev
+    container_name: django-prod
     depends_on:
       - db
     environment:
@@ -123,7 +123,7 @@ services:
   springapp:
     build:
       context: ../../spring-backend
-    container_name: spring-backend-dev
+    container_name: spring-backend-prod
     networks:
       sus-network:
         aliases:
@@ -149,7 +149,7 @@ services:
   hugo-site:
     build: 
       context: ../../documentation
-    container_name: hugo-site-dev
+    container_name: hugo-site-prod
     labels:
       - traefik.enable=true
       - traefik.http.routers.hugo-site.rule=(Host(`localhost`) || Host(`t123abcdefg.mooo.com`)) && PathPrefix(`/docs`)
@@ -168,7 +168,7 @@ services:
   frontend:
     build:
       context: ../../frontend
-    container_name: react-dev
+    container_name: frontend-prod
     networks:
       sus-network:
         aliases:
