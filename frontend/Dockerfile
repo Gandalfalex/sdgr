@@ -3,17 +3,16 @@ FROM node:latest AS build
 
 WORKDIR /app
 
-COPY package.json package-lock.json yarn.lock ./
-RUN npm install
-RUN npm install react-scripts@5.0.1 -g
+COPY package.json yarn.lock ./
+RUN yarn install
 COPY . ./
-
-RUN npm run build
+RUN yarn build
 
 # stage 2, build the nginx container
 FROM nginx:alpine
 
 RUN rm /etc/nginx/conf.d/default.conf
+COPY default.conf /etc/nginx/conf.d/
 
 COPY --from=build /app/build /usr/share/nginx/html
 
