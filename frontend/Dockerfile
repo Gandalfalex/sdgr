@@ -1,19 +1,22 @@
-FROM node:latest
+# Stage 1: Build the React application
+FROM node:latest AS build
 
-# set working directory
 WORKDIR /app
 
-# add `/app/node_modules/.bin` to $PATH
-ENV PATH /app/node_modules/.bin:$PATH
-
-# install app dependencies
-COPY package.json ./
-COPY package-lock.json ./
-RUN npm install --silent
-RUN npm install react-scripts@3.4.1 -g --silent
-
-# add app
+COPY package.json package-lock.json yarn.lock ./
+RUN npm install
+RUN npm install react-scripts@5.0.1 -g
 COPY . ./
 
-# start app
-CMD ["npm", "start"]
+RUN npm run build
+
+# stage 2, build the nginx container
+FROM nginx:alpine
+
+RUN rm /etc/nginx/conf.d/default.conf
+
+COPY --from=build /app/build /usr/share/nginx/html
+
+EXPOSE 3000
+
+CMD ["nginx", "-g", "daemon off;"]
