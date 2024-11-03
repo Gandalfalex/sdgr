@@ -11,17 +11,12 @@ DATA_SCHEMA_PATH="schema.sql"
 echo "Starting Docker Compose services..."
 
 docker compose up -d postgres --wait
-#docker exec -i "$DB_CONTAINER_NAME" psql -U "$DB_USER" -d "$DB_NAME" -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
-
+docker exec -i "$DB_CONTAINER_NAME" psql -U "$DB_USER" -d "$DB_NAME" -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
 
 docker cp "$DATA_SCHEMA_PATH" "$DB_CONTAINER_NAME":/schema.sql
-#docker exec -i "$DB_CONTAINER_NAME" psql -U "$DB_USER" -d "$DB_NAME" -f /schema.sql
+docker exec -i "$DB_CONTAINER_NAME" psql -U "$DB_USER" -d "$DB_NAME" -f /schema.sql
 
-#docker compose up -d --wait
-
-echo "All services are up and running."
-
-
+docker compose up -d --wait
 
 
 # load data.sql into project
