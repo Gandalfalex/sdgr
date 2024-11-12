@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   traefik:
     image: traefik:v3.0.0-beta5
@@ -10,12 +8,12 @@ services:
       - --providers.docker
       - --entrypoints.web.address=:80
       - --providers.docker.network=proxy
-      - --providers.docker.exposedbydefault=true 
+      - --providers.docker.exposedbydefault=true
       - --log.level=TRACE
     ports:
       - "80:80"
       - "443:443"
-      - "8090:8090" 
+      - "8090:8090"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik.yml:/etc/traefik/traefik.yml
@@ -38,7 +36,7 @@ services:
     restart: unless-stopped
 
   django:
-    build: 
+    build:
       context: ../../data-training-app/djangoProject
     container_name: django-dev
     depends_on:
@@ -90,7 +88,7 @@ services:
     restart: unless-stopped
 
   hugo-site:
-    build: 
+    build:
       context: ../../documentation
     container_name: hugo-site-dev
     labels:
@@ -118,14 +116,13 @@ services:
           - frontend-alias
     labels:
       - traefik.enable=true
-      - traefik.http.routers.frontend.rule=(Host(`localhost`) || Host(`t123abcdefg.mooo.com`)) 
+      - traefik.http.routers.frontend.rule=(Host(`localhost`) || Host(`t123abcdefg.mooo.com`))
       - traefik.http.routers.frontend.entrypoints=web
-    ports:  
+    ports:
       - "3000:3000"
     restart: unless-stopped
 
-
-  redis: 
+  redis:
     image: "redis:alpine"
     container_name: redis-dev
     ports:
@@ -135,7 +132,7 @@ services:
         aliases:
           - redis-alias
     restart: unless-stopped
-  
+
   zookeeper:
     image: wurstmeister/zookeeper
     container_name: sus-zookeeper
