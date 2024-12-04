@@ -56,7 +56,7 @@ public class PlainDataDTO {
 
     @Schema(name = "position", nullable = true, description = "position inside the track")
     @JsonProperty("position")
-    @Positive(message = "cannot have a negative position")
+    @PositiveOrZero(message = "cannot have a negative position")
     private Integer position;
 
     @Schema(name = "frequency", nullable = false, description = "repetitions per second")
