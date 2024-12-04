@@ -134,7 +134,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=sample
       - SPRING_DATASOURCE_PASSWORD=sample
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka-alias:9092
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka-alias:9093
     labels:
       - traefik.enable=true
       - "traefik.http.routers.spring-backend.rule=(Host(`localhost`) || Host(`t123abcdefg.mooo.com`)) && PathPrefix(`/springboot`)"
