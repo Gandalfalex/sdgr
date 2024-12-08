@@ -7,13 +7,15 @@ services:
       - --api.dashboard=true
       - --providers.docker
       - --entrypoints.web.address=:80
-      - --providers.docker.network=proxy
-      - --providers.docker.exposedbydefault=true
+      - --entrypoints.kafka.address=:9092
+      - --providers.docker.network=sus-network
+      - --providers.docker.exposedbydefault=false
       - --log.level=TRACE
     ports:
       - "80:80"
       - "443:443"
       - "8090:8090"
+      - "9092:9092" # Kafka broker
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik.yml:/etc/traefik/traefik.yml
@@ -79,32 +81,14 @@ services:
       - SPRING_DATASOURCE_USERNAME=sample
       - SPRING_DATASOURCE_PASSWORD=sample
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - SPRING_KAFKA_BOOTSTRAP_SERVER=kafka-alias:9093
+      - KAFKA_BOOTSTRAP_URL=kafka-alias:9093
+      - DJANGO_REST_BASE_URL=http://django-alias:8000/django/api/v1
     labels:
       - traefik.enable=true
       - "traefik.http.routers.spring-backend.rule=(Host(`localhost`) || Host(`t123abcdefg.mooo.com`)) && PathPrefix(`/springboot`)"
       - traefik.http.routers.spring-backend.entrypoints=web
       - traefik.http.middlewares.spring-stripprefix.stripprefix.prefixes=/springboot
       - "traefik.http.routers.spring-backend.middlewares=spring-stripprefix@docker"
-    restart: unless-stopped
-
-  hugo-site:
-    build:
-      context: ../../documentation
-    container_name: hugo-site-dev
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.hugo-site.rule=(Host(`localhost`) || Host(`t123abcdefg.mooo.com`)) && PathPrefix(`/docs`)
-      - traefik.http.routers.hugo-site.entrypoints=web
-      - traefik.http.middlewares.hugo-stripprefix.stripprefix.prefixes=/docs
-      - traefik.http.routers.hugo-site.middlewares=hugo-stripprefix@docker
-      - traefik.http.services.hugo-site.loadbalancer.server.port=1313
-    networks:
-      sus-network:
-        aliases:
-          - hugo-alias
-    ports:
-      - "1313:1313"
     restart: unless-stopped
 
   frontend:
@@ -150,7 +134,7 @@ services:
     image: wurstmeister/kafka
     container_name: sus-kafka
     ports:
-      - "9092:9092"
+      - "9093:9093"
     networks:
       sus-network:
         aliases:
@@ -159,8 +143,13 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zoo-alias:2181
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
       KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
-      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka-alias:9093,OUTSIDE://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka-alias:9093,OUTSIDE://traefik-alias:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+    labels:
+      - "traefik.enable=true"
+      - "traefik.tcp.routers.kafka.entrypoints=kafka"
+      - "traefik.tcp.routers.kafka.rule=HostSNI(`*`)"
+      - "traefik.tcp.services.kafka.loadbalancer.server.port=9092"
     restart: unless-stopped
 
 networks:

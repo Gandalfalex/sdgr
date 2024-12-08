@@ -9,6 +9,8 @@ entryPoints:
     address: ":80"
   websecure:
     address: ":443"
+  kafka:
+    address: ":9092"
 
 providers:
   docker:
@@ -16,7 +18,7 @@ providers:
     watch: true
     network: sus-network
     defaultRule: "Host(`{{ trimPrefix `/` .Name }}.docker.localhost`)"
-    
+
 http:
   middlewares:
     django-stripprefix:
