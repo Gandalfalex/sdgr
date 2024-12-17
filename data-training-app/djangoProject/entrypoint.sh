@@ -1,8 +1,5 @@
 #!/bin/bash
 # this might need to be updated for shell...
-python manage.py makemigrations
-python manage.py migrate
-
 # Start the Daphne server
 #exec daphne djangoProject.asgi:application -u /tmp/daphne.sock --bind 0.0.0.0:8000
 
