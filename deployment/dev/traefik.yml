@@ -17,19 +17,4 @@ providers:
     endpoint: "unix:///var/run/docker.sock"
     watch: true
     network: sus-network
-    defaultRule: "Host(`{{ trimPrefix `/` .Name }}.docker.localhost`)"
-
-http:
-  middlewares:
-    django-stripprefix:
-      stripPrefix:
-        prefixes:
-          - "/django"
-    springapp-stripprefix:
-      stripPrefix:
-        prefixes:
-          - "/springboot"
-    hugo-site-strippprefix:
-      stripPrefix:
-        prefixes:
-          - "/docs"
+    defaultRule: "Host(`{{ .Name }}.docker.localhost`)"

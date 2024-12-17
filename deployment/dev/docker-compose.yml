@@ -48,20 +48,10 @@ services:
       - DATABASE_ALIAS=db-alias
       - REDIS_ALIAS=redis-alias
       - DJANGO_SETTINGS_MODULE=djangoProject.settings
-    ports:
-      - "8000:8000"
     networks:
       sus-network:
         aliases:
           - django-alias
-    labels:
-      - traefik.enable=true
-      - "traefik.http.routers.django-backend.rule=(Host(`localhost`) || Host(`t123abcdefg.mooo.com`)) && PathPrefix(`/django`)"
-      - traefik.http.routers.django-backend.entrypoints=web
-      - "traefik.http.middlewares.django-stripprefix.stripprefix.prefixes=/django"
-      - "traefik.http.routers.django-backend.middlewares=django-stripprefix@docker"
-      - "traefik.http.middlewares.django-headers.headers.customrequestheaders.Upgrade=$http_upgrade"
-      - "traefik.http.middlewares.django-headers.headers.customrequestheaders.Connection=$connection_upgrade"
     restart: unless-stopped
 
   springapp:
@@ -83,12 +73,6 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - KAFKA_BOOTSTRAP_URL=kafka-alias:9093
       - DJANGO_REST_BASE_URL=http://django-alias:8000/django/api/v1
-    labels:
-      - traefik.enable=true
-      - "traefik.http.routers.spring-backend.rule=(Host(`localhost`) || Host(`t123abcdefg.mooo.com`)) && PathPrefix(`/springboot`)"
-      - traefik.http.routers.spring-backend.entrypoints=web
-      - traefik.http.middlewares.spring-stripprefix.stripprefix.prefixes=/springboot
-      - "traefik.http.routers.spring-backend.middlewares=spring-stripprefix@docker"
     restart: unless-stopped
 
   frontend:
@@ -101,9 +85,9 @@ services:
           - frontend-alias
     labels:
       - traefik.enable=true
-      - traefik.http.routers.frontend.rule=(Host(`localhost`) || Host(`t123abcdefg.mooo.com`))
-      - traefik.http.routers.frontend.entrypoints=web
-      - traefik.http.services.frontend.loadbalancer.server.port=3000
+      - traefik.http.routers.nginx.rule=(Host(`myapp.com`) || Host(`localhost`))
+      - traefik.http.routers.nginx.entrypoints=web
+      - traefik.http.serv ices.nginx.loadbalancer.server.port=3000
     ports:
       - "3000:3000"
     restart: unless-stopped
@@ -148,7 +132,9 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.tcp.routers.kafka.entrypoints=kafka"
+      - "traefik.http.routers.kafka.rule=PathPrefix(`/kafka`)"
       - "traefik.tcp.routers.kafka.rule=HostSNI(`*`)"
+      - traefik.http.middlewares.kafka-stripprefix.stripprefix.prefixes=/kafka
       - "traefik.tcp.services.kafka.loadbalancer.server.port=9092"
     restart: unless-stopped
 
