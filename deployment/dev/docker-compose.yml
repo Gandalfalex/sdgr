@@ -1,6 +1,6 @@
 services:
   traefik:
-    image: traefik:v3.2.1
+    image: traefik:v3.2.3
     container_name: traefik-proxy
     command:
       - --api.insecure=true
@@ -84,10 +84,11 @@ services:
         aliases:
           - frontend-alias
     labels:
+      - traefik.http.routers.frontend.service=frontend
       - traefik.enable=true
-      - traefik.http.routers.nginx.rule=(Host(`myapp.com`) || Host(`localhost`))
+      - traefik.http.routers.nginx.rule=(Host(`http://t123abcdefg.mooo.com`) || Host(`localhost`))
       - traefik.http.routers.nginx.entrypoints=web
-      - traefik.http.serv ices.nginx.loadbalancer.server.port=3000
+      - traefik.http.services.nginx.loadbalancer.server.port=3000
     ports:
       - "3000:3000"
     restart: unless-stopped

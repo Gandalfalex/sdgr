@@ -1174,6 +1174,13 @@
   dependencies:
     regenerator-runtime "^0.14.0"
 
+"@babel/runtime@^7.26.0":
+  version "7.26.0"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.26.0.tgz#8600c2f595f277c60815256418b85356a65173c1"
+  integrity sha512-FDSOghenHTiToteC/QRlv2q3DhPZ/oOXTBoirfWNx1Cx3TMVcGWQtMMmQcSvb/JjpNeGzx8Pq/b4fKEJuWm1sw==
+  dependencies:
+    regenerator-runtime "^0.14.0"
+
 "@babel/template@^7.18.10", "@babel/template@^7.22.5", "@babel/template@^7.3.3":
   version "7.22.5"
   resolved "https://registry.npmjs.org/@babel/template/-/template-7.22.5.tgz"
@@ -1893,12 +1900,12 @@
   resolved "https://registry.npmjs.org/@mui/core-downloads-tracker/-/core-downloads-tracker-5.14.16.tgz"
   integrity sha512-97isBjzH2v1K7oB4UH2f4NOkBShOynY6dhnoR2XlUk/g6bb7ZBv2I3D1hvvqPtpEigKu93e7f/jAYr5d9LOc5w==
 
-"@mui/icons-material@^5.10.16":
-  version "5.11.16"
-  resolved "https://registry.npmjs.org/@mui/icons-material/-/icons-material-5.11.16.tgz"
-  integrity sha512-oKkx9z9Kwg40NtcIajF9uOXhxiyTZrrm9nmIJ4UjkU2IdHpd4QVLbCc/5hZN/y0C6qzi2Zlxyr9TGddQx2vx2A==
+"@mui/icons-material@^6.1.10":
+  version "6.1.10"
+  resolved "https://registry.yarnpkg.com/@mui/icons-material/-/icons-material-6.1.10.tgz#9ed27fc750ab4811da94c1a1252253d9d1e86cc2"
+  integrity sha512-G6P1BCSt6EQDcKca47KwvKjlqgOXFbp2I3oWiOlFgKYTANBH89yk7ttMQ5ysqNxSYAB+4TdM37MlPYp4+FkVrQ==
   dependencies:
-    "@babel/runtime" "^7.21.0"
+    "@babel/runtime" "^7.26.0"
 
 "@mui/lab@^5.0.0-alpha.119":
   version "5.0.0-alpha.119"
@@ -2057,10 +2064,10 @@
     nanoid "^3.3.6"
     prop-types "^15.8.1"
 
-"@rjsf/mui@^5.13.3":
-  version "5.13.3"
-  resolved "https://registry.npmjs.org/@rjsf/mui/-/mui-5.13.3.tgz"
-  integrity sha512-NxOJUY+dnRfaIp03u6PTIrykz879qvpUWx74kIYFs5Dq0aASuMZePz2xKHqUyzwgB8Go/Y0Cvf5lkKYCCdh4bA==
+"@rjsf/mui@^5.23.1":
+  version "5.23.1"
+  resolved "https://registry.yarnpkg.com/@rjsf/mui/-/mui-5.23.1.tgz#d03a691b1a22a3183bfc5d238a35082414086a51"
+  integrity sha512-vBcK/P4sqsfe5dZ4D4orqXxVV23Dp9angbFUWp5Si3VwOAsHnSg2N7xwgo0OuQ8LK38z7bgR/Dvhamv6g5NGeQ==
 
 "@rjsf/utils@^5.13.3":
   version "5.13.3"
