@@ -86,7 +86,7 @@ services:
     labels:
       - traefik.http.routers.frontend.service=frontend
       - traefik.enable=true
-      - traefik.http.routers.nginx.rule=(Host(`http://t123abcdefg.mooo.com`) || Host(`localhost`))
+      - traefik.http.routers.nginx.rule=(Host(`t123abcdefg.mooo.com`) || Host(`localhost`))
       - traefik.http.routers.nginx.entrypoints=web
       - traefik.http.services.nginx.loadbalancer.server.port=3000
     ports:
