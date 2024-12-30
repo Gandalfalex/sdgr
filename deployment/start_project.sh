@@ -39,4 +39,4 @@ echo "Loading data into the database from data.sql..."
 docker cp "$DATA_SQL_PATH" "$DB_CONTAINER_NAME":/data.sql
 docker exec -i "$DB_CONTAINER_NAME" psql -U "$DB_USER" -d "$DB_NAME" -f /data.sql
 
-docker compose up -d --wait
+docker compose --env-file .env.prod up -d --wait

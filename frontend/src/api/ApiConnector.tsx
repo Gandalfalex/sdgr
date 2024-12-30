@@ -8,12 +8,12 @@ const apiProtocol = protocol === "https:" ? "https:" : "http:";
 const wsProtocol = protocol === "https:" ? "wss:" : "ws:";
 
 // Dynamically set base URLs for Spring and Django APIs
-export const BASE_URL_SPRING = `${apiProtocol}//${hostname}:3000/springboot`;
-export const BASE_URL_DJANGO = `${apiProtocol}//${hostname}:3000/django`;
+export const BASE_URL_SPRING = `${apiProtocol}//${hostname}/springboot`;
+export const BASE_URL_DJANGO = `${apiProtocol}//${hostname}/django`;
 
 // Dynamically set WebSocket URLs
-export const WS_DJANGO_URL = `${wsProtocol}//${hostname}:3000/django`;
-export const WS_SPRING_URL = `${wsProtocol}//${hostname}:3000/springboot`;
+export const WS_DJANGO_URL = `${wsProtocol}//${hostname}/django`;
+export const WS_SPRING_URL = `${wsProtocol}//${hostname}/springboot`;
 
 const api2 = axios.create({
   baseURL: `${BASE_URL_SPRING}`,

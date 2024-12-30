@@ -1,9 +1,6 @@
 log:
   level: TRACE
 
-api:
-  dashboard: true
-
 entryPoints:
   web:
     address: ":80"
