@@ -38,6 +38,7 @@ export const ProjectStartDialog = (props: ProjectStartSendingDialogProps) => {
     <Dialog maxWidth="xs" open={open} onClose={onClose}>
       <DialogTitle>{"Start the sending process"}</DialogTitle>
       <DialogContent dividers>{window.location.hostname}:9092</DialogContent>
+      <DialogContent dividers>topic = {kafkaConfig?.topic}</DialogContent>
       <DialogActionComponent
         onCancel={handleCancel}
         onConfirm={startSending}

@@ -9,9 +9,11 @@ import de.tudresden.sus.adapter.outbound.entity.LogMessage;
 import de.tudresden.sus.datagenerator.kafka.KafkaMessageHolder;
 import de.tudresden.sus.ports.LogMessageServicePort;
 import de.tudresden.sus.service.LogMessageService;
+import de.tudresden.sus.util.ProjectTopicNameBuilder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import java.beans.PropertyChangeListener;
@@ -73,6 +75,7 @@ public class SendDataThread extends Thread {
                 .setUnit(track.getUnit())
                 .setTrackId(track.getId())
                 .setTrackName(track.getName());
+        var topicSessionName = ProjectTopicNameBuilder.buildTopicName(uuid);
 
         do {
             for (DataSetDO value : track.getDatasets()) {
@@ -96,7 +99,7 @@ public class SendDataThread extends Thread {
                     for (String messageValue : value.getValues()) {
                         var message = String.format("%s %s", messageValue, track.getUnit());
 
-                        template.send(String.valueOf(uuid), sender.setValue(messageValue));
+                        template.send(topicSessionName, sender.setValue(messageValue));
                         var logMessage = new LogMessage()
                                 .setTrackId(getTrack().getId())
                                 .setSendSession(sendSession)

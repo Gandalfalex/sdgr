@@ -2,6 +2,7 @@ package de.tudresden.sus.adapter.inbound.rest;
 
 
 import de.tudresden.sus.adapter.inbound.dto.KafkaTemplateDTO;
+import de.tudresden.sus.util.ProjectTopicNameBuilder;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +30,7 @@ public class KafkaController {
     public ResponseEntity<KafkaTemplateDTO> getKafkaTemplate(@PathVariable @NonNull Long projectId) {
         return new ResponseEntity<>(new KafkaTemplateDTO()
                 .setBootstrapServers(bootstrapAddress)
-                .setTopic(kafkaTopic)
+                .setTopic(ProjectTopicNameBuilder.buildTopicName(projectId))
                 .setGroupId("1")
                 .setTopicId(projectId), HttpStatus.OK);
     }

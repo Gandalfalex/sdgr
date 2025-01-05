@@ -7,6 +7,9 @@ import de.tudresden.sus.adapter.outbound.repositories.ProjectRepository;
 import de.tudresden.sus.adapter.outbound.repositories.UserRepository;
 import de.tudresden.sus.ports.ProjectServicePort;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -19,10 +22,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import reactor.core.Disposable;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * Controller for managing WebSocket connections and messaging in a Spring application.
@@ -41,7 +40,6 @@ public class WebSocketController {
 
     private final Map<Long, Disposable> activeSubscriptions = new HashMap<>();
 
-
     /**
      * Processes a message from a client to start sending messages to the kafka broker.
      *
@@ -51,30 +49,47 @@ public class WebSocketController {
      * @throws Exception if user is not found or there is an issue with project retrieval.
      */
     @MessageMapping("/start/{message}")
-    public ProjectStatusDTO processMessageFromClient(@DestinationVariable Long message, SimpMessageHeaderAccessor headerAccessor) throws Exception {
-        log.info("received something: ");
-        log.info("message: {}", message);
+    public ProjectStatusDTO processMessageFromClient(
+        @DestinationVariable Long message,
+        SimpMessageHeaderAccessor headerAccessor
+    ) throws Exception {
+        log.info("received message: {}", message);
 
-        String userEmail = (String) Objects.requireNonNull(headerAccessor.getSessionAttributes()).get("user");
+        String userEmail = (String) Objects.requireNonNull(
+            headerAccessor.getSessionAttributes()
+        ).get("user");
         headerAccessor.getSessionId();
-        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new InvalidCredentialException("user not found"));
+        User user = userRepository
+            .findByEmail(userEmail)
+            .orElseThrow(() -> new InvalidCredentialException("user not found")
+            );
 
-        var project = repository.findByIdAndUser(message, user).orElseThrow(() -> new EntityNotFoundException("cannot find project"));
+        var project = repository
+            .findByIdAndUser(message, user)
+            .orElseThrow(() ->
+                new EntityNotFoundException("cannot find project")
+            );
         if (project == null) {
             log.error("project with id {} not found", message);
             return new ProjectStatusDTO().setMessage("Project not found");
         }
 
         if (activeSubscriptions.containsKey(project.getId())) {
-            log.info("Task already running for project id: {}", project.getId());
+            log.info(
+                "Task already running for project id: {}",
+                project.getId()
+            );
             return new ProjectStatusDTO().setMessage("Task already running");
         }
 
         Disposable subscription = webSocketEventService
-                .getEventStream((project.getId()))
-                .subscribe(event -> messagingTemplate
-                        .convertAndSend("/topic/responses/" + project.getId(), event));
-
+            .getEventStream((project.getId()))
+            .subscribe(event ->
+                messagingTemplate.convertAndSend(
+                    "/topic/responses/" + project.getId(),
+                    event
+                )
+            );
 
         log.info("id of current object: {}", project.getId());
         activeSubscriptions.put(project.getId(), subscription);
@@ -91,10 +106,15 @@ public class WebSocketController {
      * @throws Exception if there is an issue with accessing the project or user data.
      */
     @MessageMapping("/end/{message}")
-    public ProjectStatusDTO processKillMessageFromClient(@DestinationVariable Long message, SimpMessageHeaderAccessor headerAccessor) throws Exception {
+    public ProjectStatusDTO processKillMessageFromClient(
+        @DestinationVariable Long message,
+        SimpMessageHeaderAccessor headerAccessor
+    ) throws Exception {
         Disposable subscription = activeSubscriptions.remove(message);
         log.info("killing messages");
-        String userEmail = (String) headerAccessor.getSessionAttributes().get("user");
+        String userEmail = (String) headerAccessor
+            .getSessionAttributes()
+            .get("user");
         User user = userRepository.findByEmail(userEmail).orElse(null);
 
         var project = repository.findByIdAndUser(message, user).orElse(null);
@@ -106,22 +126,30 @@ public class WebSocketController {
             return new ProjectStatusDTO().setMessage("Task killed");
         } else {
             log.error("Task with id {} not found or already killed", message);
-            return new ProjectStatusDTO().setMessage("Task not found or already killed");
+            return new ProjectStatusDTO()
+                .setMessage("Task not found or already killed");
         }
     }
 
-
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectEvent event) {
-        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        String userEmail = (String) headerAccessor.getSessionAttributes().get("user");
-
+        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(
+            event.getMessage()
+        );
+        String userEmail = (String) headerAccessor
+            .getSessionAttributes()
+            .get("user");
     }
 
     @EventListener
-    public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
-        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        String userEmail = (String) headerAccessor.getSessionAttributes().get("user");
+    public void handleWebSocketDisconnectListener(
+        SessionDisconnectEvent event
+    ) {
+        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(
+            event.getMessage()
+        );
+        String userEmail = (String) headerAccessor
+            .getSessionAttributes()
+            .get("user");
     }
-
 }

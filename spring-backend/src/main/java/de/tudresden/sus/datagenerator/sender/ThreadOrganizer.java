@@ -2,11 +2,8 @@ package de.tudresden.sus.datagenerator.sender;
 
 import de.tudresden.sus.adapter.inbound.websocket.WebSocketEventService;
 import de.tudresden.sus.adapter.outbound.domain_objects.TrackDO;
-import de.tudresden.sus.adapter.outbound.entity.Track;
-import de.tudresden.sus.ports.TrackServicePort;
 import de.tudresden.sus.service.LogMessageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 

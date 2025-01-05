@@ -9,12 +9,18 @@ import de.tudresden.sus.aop.UserAspect;
 import de.tudresden.sus.datagenerator.sender.ThreadOrganizer;
 import de.tudresden.sus.ports.ProjectServicePort;
 import de.tudresden.sus.ports.TrackServicePort;
+import de.tudresden.sus.util.ProjectTopicNameBuilder;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.NewTopic;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +29,9 @@ public class ProjectService implements ProjectServicePort{
 
     private final ProjectRepository projectRepository;
     private final TrackServicePort trackService;
+    private final KafkaAdmin kafkaAdmin;
+    @Value(value="${spring.kafka.bootstrap-topic}")
+    private String topicName;
 
     private final ThreadOrganizer threadOrganizer;
 
@@ -61,8 +70,18 @@ public class ProjectService implements ProjectServicePort{
     public Project createProject(Project project) {
         User user = UserAspect.getCurrentUser();
         log.info("{} saved, ", project.toString());
+
         project.setUser(user);
-        return projectRepository.save(project);
+        var savedProject = projectRepository.save(project);
+
+        try (AdminClient adminClient = AdminClient.create(kafkaAdmin.getConfigurationProperties())) {
+            var newTopic = new NewTopic(ProjectTopicNameBuilder.buildTopicName(savedProject.getId()), 1, (short) 1);
+            adminClient.createTopics(List.of(newTopic)).all().get();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create topic " + topicName, e);
+        }
+
+        return savedProject;
     }
 
     /**
@@ -96,9 +115,14 @@ public class ProjectService implements ProjectServicePort{
         try {
             Project project = projectRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("No project found for given id"));
             projectRepository.delete(project);
+            AdminClient adminClient = AdminClient.create(kafkaAdmin.getConfigurationProperties());
+            adminClient.deleteTopics(List.of(ProjectTopicNameBuilder.buildTopicName(id))).all().get();
         } catch (EntityNotFoundException e) {
-            log.error("Entity not found for ID {}: {}", id, e.getMessage());
+            log.error("Project entity not found for ID {}: {}", id, e.getMessage());
             throw e;
+        } catch (ExecutionException | InterruptedException e) {
+            log.error("Failed to delete topic {}", topicName, e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -125,5 +149,4 @@ public class ProjectService implements ProjectServicePort{
         log.info("stop sending messages");
         threadOrganizer.stopThreads(project.getId());
     }
-
 }
