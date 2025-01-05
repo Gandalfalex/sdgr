@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import de.tudresden.sus.adapter.outbound.entity.extensions.DataTypeOption;
-import de.tudresden.sus.adapter.outbound.entity.extensions.DataTypeSchema;
 import de.tudresden.sus.adapter.outbound.entity.extensions.types.chardata.CharDataSet;
 import de.tudresden.sus.adapter.outbound.entity.extensions.types.filedata.FileDataSet;
 import de.tudresden.sus.adapter.outbound.entity.extensions.types.floatdata.FloatDataSet;
